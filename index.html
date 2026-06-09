@@ -60,46 +60,7 @@
             transition: transform 0.3s ease;
         }
 
-        /* Pixel Cat Container */
-        .cat-container {
-            margin-bottom: 20px;
-            position: relative;
-            display: inline-block;
-            animation: catBob 2.5s ease-in-out infinite;
-        }
-
-        @keyframes catBob {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        /* Speech Bubble */
-        .speech-bubble {
-            background: white;
-            border-radius: 12px;
-            padding: 10px 15px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #ff4e50;
-            margin-bottom: 15px;
-            position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            display: inline-block;
-        }
-
-        .speech-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 8px 8px 0;
-            border-style: solid;
-            border-color: white transparent;
-            display: block;
-            width: 0;
-        }
-
+        
         /* Custom Input Styling */
         .name-input {
             width: 100%;
@@ -210,7 +171,7 @@
         <h1 class="sandbox-title" id="welcomeMessage">Welcome to the Sandbox!</h1>
     </div>
     <div class="cat-container">
-    <img src="Screenshot_20260609_143850_Google.jpg" alt="Pixel Cat" class="pixel-cat">
+    <img src="cat.png" alt="Pixel Cat" class="pixel-cat">
     </div>
 
     <script>
