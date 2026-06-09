@@ -73,28 +73,6 @@
             50% { transform: translateY(-8px); }
         }
 
-        /* CSS-based pure pixel art cat asset shape */
-        .pixel-cat {
-            width: 80px;
-            height: 80px;
-            background: transparent;
-            position: relative;
-            image-rendering: pixelated;
-            box-shadow: 
-                /* Tail */
-                64px 48px 0 #ff9233, 64px 40px 0 #ff9233, 56px 48px 0 #ff9233,
-                /* Body Base Orange */
-                16px 56px 0 #ff9233, 24px 56px 0 #ff9233, 32px 56px 0 #ffffff, 40px 56px 0 #ffffff, 48px 56px 0 #ff9233,
-                16px 48px 0 #ff9233, 24px 48px 0 #ff9233, 32px 48px 0 #ffffff, 40px 48px 0 #ffffff, 48px 48px 0 #ff9233,
-                /* Head & Face Setup */
-                16px 40px 0 #ff9233, 24px 40px 0 #ff9233, 32px 40px 0 #ffffff, 40px 40px 0 #ffffff, 48px 40px 0 #ff9233,
-                16px 32px 0 #ff9233, 24px 32px 0 #ff9233, 32px 32px 0 #ffffff, 40px 32px 0 #ffffff, 48px 32px 0 #ff9233,
-                /* Eyes & Nose details */
-                24px 32px 0 #333333, 40px 32px 0 #333333, 32px 36px 0 #ff7e7e,
-                /* Ears */
-                16px 24px 0 #ff9233, 48px 24px 0 #ff9233;
-        }
-
         /* Speech Bubble */
         .speech-bubble {
             background: white;
@@ -222,10 +200,6 @@
     <!-- SCREEN 1: The Rippling Light-Red Menu Screen -->
     <div class="screen-menu" id="menuScreen">
         <div class="glass-card">
-            <div class="cat-container">
-                <div class="speech-bubble" id="menuBubble">Hey there! Enter your name below!</div>
-                <div class="pixel-cat"></div>
-            </div>
             <input type="text" id="usernameInput" class="name-input" placeholder="Your Name..." autocomplete="off">
             <button class="confirm-btn" id="confirmBtn">Let's Go! ✨</button>
         </div>
@@ -234,10 +208,6 @@
     <!-- SCREEN 2: The Soft Gradient Sandbox -->
     <div class="screen-sandbox" id="sandboxScreen">
         <h1 class="sandbox-title" id="welcomeMessage">Welcome to the Sandbox!</h1>
-        <div class="cat-container interactive-cat" id="sandboxCat">
-            <div class="speech-bubble" id="sandboxBubble">Tap me for love! 🐾</div>
-            <div class="pixel-cat" style="transform: scale(1.5);"></div>
-        </div>
     </div>
 
     <script>
@@ -246,24 +216,12 @@
         const menuScreen = document.getElementById('menuScreen');
         const sandboxScreen = document.getElementById('sandboxScreen');
         const welcomeMessage = document.getElementById('welcomeMessage');
-        const sandboxCat = document.getElementById('sandboxCat');
-        const sandboxBubble = document.getElementById('sandboxBubble');
-
-        // Dynamic random cat dialogues array
-        const catQuotes = [
-            "Purrfect! You clicked me! 😸",
-            "Give me some virtual treats! 🐟",
-            "*Soft headpats accepted* 💕",
-            "Meow! You are doing great today!",
-            "I'm keeping track of your clicks! 👀"
-        ];
 
         // Screen State Swap Handler
         confirmBtn.addEventListener('click', () => {
             const name = usernameInput.value.trim();
             if (name === "") {
-                const bubble = document.getElementById('menuBubble');
-                bubble.innerText = "Don't leave it blank! 😿";
+                usernameInput.placeholder = "Don't leave it blank! 😿";
                 return;
             }
 
@@ -271,18 +229,6 @@
             welcomeMessage.innerText = `Welcome, ${name}! ✨`;
             menuScreen.classList.add('hidden');
             sandboxScreen.classList.add('active');
-        });
-
-        // Touch Feedback Loop Interaction
-        sandboxCat.addEventListener('click', () => {
-            // Pick a random quote
-            const randomIndex = Math.floor(Math.random() * catQuotes.length);
-            sandboxBubble.innerText = catQuotes[randomIndex];
-            
-            // Mobile Vibration Haptic Feedback (Triggers if available on physical device)
-            if (navigator.vibrate) {
-                navigator.vibrate(40); 
-            }
         });
     </script>
 </body>
