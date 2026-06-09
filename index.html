@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Cat Sandbox</title>
+    <style>
+        /* Base Reset & Fonts */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* SCREEN 1: Wavy Light Red Background Wrapper */
+        .screen-menu {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff7e7e, #ff4e50, #f9d423);
+            background-size: 400% 400%;
+            animation: rippleGradient 12s ease infinite;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+
+        /* Soft ripple wave background animation */
+        @keyframes rippleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glassmorphism Text Box Card Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+            text-align: center;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+        }
+
+        /* Pixel Cat Container */
+        .cat-container {
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            animation: catBob 2.5s ease-in-out infinite;
+        }
+
+        @keyframes catBob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* CSS-based pure pixel art cat asset shape */
+        .pixel-cat {
+            width: 80px;
+            height: 80px;
+            background: transparent;
+            position: relative;
+            image-rendering: pixelated;
+            box-shadow: 
+                /* Tail */
+                64px 48px 0 #ff9233, 64px 40px 0 #ff9233, 56px 48px 0 #ff9233,
+                /* Body Base Orange */
+                16px 56px 0 #ff9233, 24px 56px 0 #ff9233, 32px 56px 0 #ffffff, 40px 56px 0 #ffffff, 48px 56px 0 #ff9233,
+                16px 48px 0 #ff9233, 24px 48px 0 #ff9233, 32px 48px 0 #ffffff, 40px 48px 0 #ffffff, 48px 48px 0 #ff9233,
+                /* Head & Face Setup */
+                16px 40px 0 #ff9233, 24px 40px 0 #ff9233, 32px 40px 0 #ffffff, 40px 40px 0 #ffffff, 48px 40px 0 #ff9233,
+                16px 32px 0 #ff9233, 24px 32px 0 #ff9233, 32px 32px 0 #ffffff, 40px 32px 0 #ffffff, 48px 32px 0 #ff9233,
+                /* Eyes & Nose details */
+                24px 32px 0 #333333, 40px 32px 0 #333333, 32px 36px 0 #ff7e7e,
+                /* Ears */
+                16px 24px 0 #ff9233, 48px 24px 0 #ff9233;
+        }
+
+        /* Speech Bubble */
+        .speech-bubble {
+            background: white;
+            border-radius: 12px;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #ff4e50;
+            margin-bottom: 15px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: inline-block;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: white transparent;
+            display: block;
+            width: 0;
+        }
+
+        /* Custom Input Styling */
+        .name-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .name-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .name-input:focus {
+            border-color: white;
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+        }
+
+        /* High-response Interactive Button */
+        .confirm-btn {
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: white;
+            color: #ff4e50;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
+        }
+
+        /* Micro-interactions Touch Loop */
+        .confirm-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* SCREEN 2: Pink, Magenta, Pale White Playground */
+        .screen-sandbox {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffeef8, #ffb7b2, #e0b0ff);
+            background-size: 400% 400%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.05);
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+            z-index: 1;
+        }
+
+        /* Activating Screen Transitions via JS */
+        .screen-menu.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        .screen-sandbox.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        /* Sandbox Specific Elements */
+        .sandbox-title {
+            color: #d048b6;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .interactive-cat {
+            cursor: pointer;
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .interactive-cat:active {
+            transform: scale(1.3) rotate(5deg);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: The Rippling Light-Red Menu Screen -->
+    <div class="screen-menu" id="menuScreen">
+        <div class="glass-card">
+            <div class="cat-container">
+                <div class="speech-bubble" id="menuBubble">Hey there! Enter your name below!</div>
+                <div class="pixel-cat"></div>
+            </div>
+            <input type="text" id="usernameInput" class="name-input" placeholder="Your Name..." autocomplete="off">
+            <button class="confirm-btn" id="confirmBtn">Let's Go! ✨</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: The Soft Gradient Sandbox -->
+    <div class="screen-sandbox" id="sandboxScreen">
+        <h1 class="sandbox-title" id="welcomeMessage">Welcome to the Sandbox!</h1>
+        <div class="cat-container interactive-cat" id="sandboxCat">
+            <div class="speech-bubble" id="sandboxBubble">Tap me for love! 🐾</div>
+            <div class="pixel-cat" style="transform: scale(1.5);"></div>
+        </div>
+    </div>
+
+    <script>
+        const confirmBtn = document.getElementById('confirmBtn');
+        const usernameInput = document.getElementById('usernameInput');
+        const menuScreen = document.getElementById('menuScreen');
+        const sandboxScreen = document.getElementById('sandboxScreen');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const sandboxCat = document.getElementById('sandboxCat');
+        const sandboxBubble = document.getElementById('sandboxBubble');
+
+        // Dynamic random cat dialogues array
+        const catQuotes = [
+            "Purrfect! You clicked me! 😸",
+            "Give me some virtual treats! 🐟",
+            "*Soft headpats accepted* 💕",
+            "Meow! You are doing great today!",
+            "I'm keeping track of your clicks! 👀"
+        ];
+
+        // Screen State Swap Handler
+        confirmBtn.addEventListener('click', () => {
+            const name = usernameInput.value.trim();
+            if (name === "") {
+                const bubble = document.getElementById('menuBubble');
+                bubble.innerText = "Don't leave it blank! 😿";
+                return;
+            }
+
+            // Transition Animation
+            welcomeMessage.innerText = `Welcome, ${name}! ✨`;
+            menuScreen.classList.add('hidden');
+            sandboxScreen.classList.add('active');
+        });
+
+        // Touch Feedback Loop Interaction
+        sandboxCat.addEventListener('click', () => {
+            // Pick a random quote
+            const randomIndex = Math.floor(Math.random() * catQuotes.length);
+            sandboxBubble.innerText = catQuotes[randomIndex];
+            
+            // Mobile Vibration Haptic Feedback (Triggers if available on physical device)
+            if (navigator.vibrate) {
+                navigator.vibrate(40); 
+            }
+        });
+    </script>
+</body>
+</html>
