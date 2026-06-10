@@ -57,7 +57,7 @@
                 catSprite.src = "assets/cat1.png";
             }, 150);
 
-        }, 3500); // Blinks roughly every 3.5 seconds
+        }, 2900); // Blinks roughly every 2.9 seconds
     }
 
     // 3. Click handler for random dialogue strings
