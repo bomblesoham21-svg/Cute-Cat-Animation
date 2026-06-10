@@ -49,7 +49,7 @@
 
             // Save the exact image that was active right before clicking
             const originalSpriteSrc = catSprite.src;
-            catSprite.src = 'assets/caveat.png'; // Swap to eating state
+            catSprite.src = 'assets/cateat.png'; // Swap to eating state
 
             setTimeout(() => {
                 catSprite.src = originalSpriteSrc; // Revert back
