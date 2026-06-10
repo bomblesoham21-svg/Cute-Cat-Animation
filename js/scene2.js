@@ -13,7 +13,11 @@
         "I’m coding at 200 meows per minute.",
         "Everything looks perfect from up here!",
         "Can we check GitHub again?",
-        "Feed me code (and tuna)!"
+        "Feed me code (and tuna)!",
+        "I wish I could fly like the birds!",
+        "You look so cute 😽!",
+        "Stop touching me 😾",
+        "What are we doing today 😺?"
     ];
 
     let initialized = false;
