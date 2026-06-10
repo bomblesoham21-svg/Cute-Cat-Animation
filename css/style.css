@@ -161,3 +161,98 @@ body::after {
     transform: translateY(1px);
     box-shadow: 0 4px 12px rgba(221, 17, 34, 0.4);
 }
+
+
+
+/* --- Scene 2 Layout & Background Override --- */
+#scene-2 {
+    /* Beautiful light pink and pale white fluid-feeling gradient */
+    background: linear-gradient(135deg, #fff5f6 0%, #ffd6dc 50%, #f4e8fa 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.scene2-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    z-index: 5;
+}
+
+/* --- Interactive Cat Sprite --- */
+.cat-container {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.cat-container:active {
+    transform: scale(0.95); /* Subtle squish effect when clicked */
+}
+
+#cat-sprite {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Keeps pixel art sharp if your pngs are low-res retro style */
+    image-rendering: pixelated; 
+}
+
+/* --- Pixelated Dialogue Box --- */
+.pixel-box {
+    background: #ffffff;
+    color: #222222;
+    border: 4px solid #000000;
+    padding: 15px 25px;
+    max-width: 340px;
+    min-height: 80px;
+    width: 90%;
+    position: relative;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Pixelated retro block shadow */
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15);
+    
+    /* Using monospace as a default crisp fallback for a pixel feel */
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* Retro Dialogue Box Tail/Arrow */
+.pixel-box::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+    display: block;
+    width: 0;
+}
+
+.pixel-box::before {
+    content: '';
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: #000000 transparent transparent transparent;
+    display: block;
+    width: 0;
+    z-index: -1;
+}
