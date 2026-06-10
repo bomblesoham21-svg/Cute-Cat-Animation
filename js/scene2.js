@@ -33,6 +33,32 @@
     observer.observe(scene2, { attributes: true, attributeFilter: ['class'] });
 
     function startScene2() {
+            // --- NEW FEEDING SYSTEM ROUTINE ---
+    function setupFeedingSystem() {
+        const feedBtn = document.querySelector('.feed-btn');
+        if (!feedBtn || !catSprite) return;
+
+        let isFeeding = false;
+
+        feedBtn.addEventListener('click', () => {
+            if (isFeeding) return; // Ignore spam clicks
+            isFeeding = true;
+
+            // Pause the blinking loop if a timeout pointer exists
+            if (window.blinkingTimeout) clearTimeout(window.blinkingTimeout);
+
+            // Save the exact image that was active right before clicking
+            const originalSpriteSrc = catSprite.src;
+            catSprite.src = 'assets/caveat.png'; // Swap to eating state
+
+            setTimeout(() => {
+                catSprite.src = originalSpriteSrc; // Revert back
+                isFeeding = false;
+                startBlinkingLoop(); // Safely restart the loop
+            }, 1500); // 1.5 seconds
+        });
+    }
+
         // Paste this inside your scene2.js initialization routine
 (function initKittenBackground() {
     const canvas = document.getElementById('gradient-canvas');
