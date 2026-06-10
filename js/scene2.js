@@ -33,6 +33,79 @@
     observer.observe(scene2, { attributes: true, attributeFilter: ['class'] });
 
     function startScene2() {
+        // Paste this inside your scene2.js initialization routine
+(function initKittenBackground() {
+    const canvas = document.getElementById('gradient-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+
+    // Premium Soft Pastel Kitten Palette
+    const palette = {
+        base: { r: 255, g: 245, b: 246 }, // Pale Dreamy White Base
+        c1: { r: 255, g: 214, b: 220 },   // Soft Blush Pink
+        c2: { r: 244, g: 232, b: 250 },   // Light Lavender Mist
+        c3: { r: 224, g: 140, b: 195 }    // Soft, Gentle Magenta (Not too bright)
+    };
+
+    let tick = 0;
+
+    function drawKittenFluid() {
+        // Super slow, airy, whimsical movement pace
+        tick += 0.0012; 
+
+        // 1. Fill base pale white layer
+        ctx.fillStyle = `rgb(${palette.base.r}, ${palette.base.g}, ${palette.base.b})`;
+        ctx.fillRect(0, 0, width, height);
+
+        // 2. Layer 1: Soft Blush Pink drifting flow
+        const x1 = width * 0.5 + Math.sin(tick * 1.1 + 1.5) * (width * 0.2);
+        const y1 = height * 0.5 + Math.cos(tick * 0.9 + 0.5) * (height * 0.2);
+        const r1 = Math.max(width, height) * 0.75;
+        let g1 = ctx.createRadialGradient(x1, y1, 0, x1, y1, r1);
+        g1.addColorStop(0, `rgba(${palette.c1.r}, ${palette.c1.g}, ${palette.c1.b}, 0.8)`);
+        g1.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = g1;
+        ctx.fillRect(0, 0, width, height);
+
+        // 3. Layer 2: Lavender Mist glow bleed
+        ctx.globalCompositeOperation = 'multiply'; 
+        const x2 = width * 0.3 + Math.cos(tick * 0.8) * (width * 0.25);
+        const y2 = height * 0.7 + Math.sin(tick * 1.2) * (height * 0.15);
+        const r2 = Math.max(width, height) * 0.6;
+        let g2 = ctx.createRadialGradient(x2, y2, 0, x2, y2, r2);
+        g2.addColorStop(0, `rgba(${palette.c2.r}, ${palette.c2.g}, ${palette.c2.b}, 0.6)`);
+        g2.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = g2;
+        ctx.fillRect(0, 0, width, height);
+
+        // 4. Layer 3: Soft Dreamy Magenta accents
+        ctx.globalCompositeOperation = 'screen';
+        const x3 = width * 0.7 + Math.sin(tick * 0.9) * (width * 0.2);
+        const y3 = height * 0.2 + Math.cos(tick * 1.0) * (height * 0.2);
+        const r3 = Math.max(width, height) * 0.55;
+        let g3 = ctx.createRadialGradient(x3, y3, 0, x3, y3, r3);
+        g3.addColorStop(0, `rgba(${palette.c3.r}, ${palette.c3.g}, ${palette.c3.b}, 0.45)`);
+        g3.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = g3;
+        ctx.fillRect(0, 0, width, height);
+
+        // Reset system blend mode so cat graphics render cleanly
+        ctx.globalCompositeOperation = 'source-over';
+
+        requestAnimationFrame(drawKittenFluid);
+    }
+
+    drawKittenFluid();
+})();
+
         // Fetch the username saved from Scene 1
         const name = window.currentUserName || "Human";
         
