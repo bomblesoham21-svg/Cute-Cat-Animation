@@ -256,3 +256,18 @@ body::after {
     width: 0;
     z-index: -1;
 }
+
+
+.feed-btn {
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px; /* Soft borders */
+    padding: 12px 30px;
+    font-family: 'Courier New', Courier, monospace, 'Press Start 2P'; /* Pixel styles */
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
