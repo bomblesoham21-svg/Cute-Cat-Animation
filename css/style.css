@@ -13,7 +13,7 @@ body, html {
     background-color: #000;
 }
 
-/* Background Canvas converted to pure CSS Gradient */
+/* Background Canvas */
 #gradient-canvas {
     position: fixed;
     top: 0;
@@ -21,13 +21,23 @@ body, html {
     width: 100%;
     height: 100%;
     z-index: 1;
-    /* This creates a beautiful, glowing multi-color gradient style */
-    background: radial-gradient(at 0% 0%, #ff7e5f 0px, transparent 50%),
-                radial-gradient(at 100% 0%, #feb47b 0px, transparent 50%),
-                radial-gradient(at 100% 100%, #86e3ce 0px, transparent 50%),
-                radial-gradient(at 0% 100%, #d62839 0px, transparent 50%);
-    background-color: #1a1a2e; /* Dark fallback base instead of pure black */
+    filter: blur(20px); /* Softens edge calculations into smoky liquid transitions */
 }
+
+/* Premium Noise Grain Overlay Layer */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Sits directly over canvas but under UI */
+    opacity: 0.04; /* Micro-subtle premium texture */
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://w3.org id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
 
 
 /* Scene Containers */
