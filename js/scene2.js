@@ -40,24 +40,24 @@
 
         let isFeeding = false;
 
-        feedBtn.addEventListener('click', () => {
-            if (isFeeding) return; // Ignore spam clicks
+            feedBtn.addEventListener('click', (event) => {
+            event.stopPropagation(); // Stops parent container click events from interfering
+            if (isFeeding) return; 
             isFeeding = true;
 
-            // Pause the blinking loop if a timeout pointer exists
             if (window.blinkingTimeout) clearTimeout(window.blinkingTimeout);
 
-            // Save the exact image that was active right before clicking
             const originalSpriteSrc = catSprite.src;
-            catSprite.src = 'assets/cateat.png'; // Swap to eating state
+            
+            // Hardcoded absolute fallback to ensure the browser finds the image root
+            catSprite.src = './assets/cateat.png'; 
 
             setTimeout(() => {
-                catSprite.src = originalSpriteSrc; // Revert back
+                catSprite.src = originalSpriteSrc; 
                 isFeeding = false;
-                startBlinkingLoop(); // Safely restart the loop
-            }, 1500); // 1.5 seconds
+                startBlinkingLoop(); 
+            }, 1500);
         });
-    }
 
         // Paste this inside your scene2.js initialization routine
 (function initKittenBackground() {
