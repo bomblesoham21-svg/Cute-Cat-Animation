@@ -65,6 +65,7 @@
     initKittenBackground();
 }
 
+
     // 2. Pet the cat - shows happy image and increments pet count
     function onCatPet() {
         // Increment pet count
