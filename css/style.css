@@ -173,6 +173,48 @@ body::after {
     background: transparent !important; /* Removes the flat color wall */
 }
 
+/* Counter Bars at Top */
+.counter-bars {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 40px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 15px 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.counter-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.counter-label {
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.counter-value {
+    background: linear-gradient(135deg, #ff3344, #dd1122);
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 5px 15px;
+    border-radius: 12px;
+    min-width: 50px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(221, 17, 34, 0.3);
+}
+
 .scene2-layout {
     display: flex;
     flex-direction: column;
@@ -269,5 +311,17 @@ body::after {
     font-weight: bold;
     cursor: pointer;
     text-transform: uppercase;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+.feed-btn:hover {
+    background-color: #333333;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+}
+
+.feed-btn:active {
+    transform: translateY(0px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
