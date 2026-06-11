@@ -3,6 +3,8 @@
     const catSprite = document.getElementById('cat-sprite');
     const dialogueText = document.getElementById('dialogue-text');
     const scene2 = document.getElementById('scene-2');
+    const petCountEl = document.getElementById('pet-count');
+    const feedCountEl = document.getElementById('feed-count');
 
     // Array of random pixel-style kitten quotes
     const catDialogues = [
@@ -20,9 +22,13 @@
         "What are we doing today 😺?"
     ];
 
+    // Counters
+    let petCount = 0;
+    let feedCount = 0;
     let initialized = false;
     let isFeeding = false;
     let blinkingTimeout = null;
+    let happyTimeout = null;
 
     // 1. Monitor when Scene 2 reveals itself to trigger initial greeting
     const observer = new MutationObserver(() => {
@@ -44,8 +50,8 @@
         // Start the realistic eye-blinking loop
         startBlinkingLoop();
 
-        // Attach click behavior for random text generation
-        catSprite.addEventListener('click', triggerRandomDialogue);
+        // Attach click behavior for pet interaction
+        catSprite.addEventListener('click', onCatPet);
 
         // Setup feeding system
         setupFeedingSystem();
@@ -54,7 +60,34 @@
         initKittenBackground();
     }
 
-    // 2. Realistic Cat Blinking Loop
+    // 2. Pet the cat - shows happy image and increments pet count
+    function onCatPet() {
+        // Increment pet count
+        petCount++;
+        petCountEl.textContent = petCount;
+
+        // Clear any existing happy timeout
+        if (happyTimeout) clearTimeout(happyTimeout);
+
+        // Clear blinking timeout
+        if (blinkingTimeout) clearTimeout(blinkingTimeout);
+
+        // Show happy face immediately
+        catSprite.src = "assets/cathappy.png";
+
+        // Show random dialogue
+        const randomIndex = Math.floor(Math.random() * catDialogues.length);
+        dialogueText.textContent = catDialogues[randomIndex];
+
+        // Return to normal cat after 800ms
+        happyTimeout = setTimeout(() => {
+            catSprite.src = "assets/cat1.png";
+            // Resume blinking loop
+            startBlinkingLoop();
+        }, 800);
+    }
+
+    // 3. Realistic Cat Blinking Loop
     function startBlinkingLoop() {
         function blink() {
             // Switch to blink image
@@ -64,18 +97,12 @@
             setTimeout(() => {
                 catSprite.src = "assets/cat1.png";
                 // Schedule next blink
-                blinkingTimeout = setTimeout(blink, 2400);
+                blinkingTimeout = setTimeout(blink, 2900);
             }, 150);
         }
 
         // Start the blinking cycle
         blinkingTimeout = setTimeout(blink, 2900);
-    }
-
-    // 3. Click handler for random dialogue strings
-    function triggerRandomDialogue() {
-        const randomIndex = Math.floor(Math.random() * catDialogues.length);
-        dialogueText.textContent = catDialogues[randomIndex];
     }
 
     // 4. Feeding System
@@ -89,8 +116,13 @@
             if (isFeeding) return;
             isFeeding = true;
 
+            // Increment feed count
+            feedCount++;
+            feedCountEl.textContent = feedCount;
+
             // Clear the current blinking timeout
             if (blinkingTimeout) clearTimeout(blinkingTimeout);
+            if (happyTimeout) clearTimeout(happyTimeout);
 
             // Store the current sprite src to restore later
             const originalSpriteSrc = catSprite.src;
@@ -101,7 +133,7 @@
 
             // Restore after feeding animation
             setTimeout(() => {
-                catSprite.src = originalSpriteSrc;
+                catSprite.src = "assets/cat1.png";
                 dialogueText.textContent = "Thanks! That was yummy! 🐱";
                 isFeeding = false;
                 
