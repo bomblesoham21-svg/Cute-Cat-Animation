@@ -41,24 +41,29 @@
     observer.observe(scene2, { attributes: true, attributeFilter: ['class'] });
 
     function startScene2() {
-        // Fetch the username saved from Scene 1
-        const name = window.currentUserName || "Human";
-        
-        // Initial customized greeting
-        dialogueText.textContent = `Hello, ${name}! Welcome to my world! 🐾`;
-
-        // Start the realistic eye-blinking loop
-        startBlinkingLoop();
-
-        // Attach click behavior for pet interaction
-        catSprite.addEventListener('click', onCatPet);
-
-        // Setup feeding system
-        setupFeedingSystem();
-
-        // Setup scene 2 background gradient
-        initKittenBackground();
+    // 1. Retrieve the name from Scene 1 or fallback to LocalStorage, then default to Human
+    const name = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
+    
+    // 2. Persist the name in the browser storage for future visits
+    if (name !== "Human") {
+        localStorage.setItem('savedUserName', name);
     }
+    
+    // Initial customized greeting
+    dialogueText.textContent = `Hello, ${name}! Welcome to my world! 🐾`;
+
+    // Start the realistic eye-blinking loop
+    startBlinkingLoop();
+
+    // Attach click behavior for pet interaction
+    catSprite.addEventListener('click', onCatPet);
+
+    // Setup feeding system
+    setupFeedingSystem();
+
+    // Setup scene 2 background gradient
+    initKittenBackground();
+}
 
     // 2. Pet the cat - shows happy image and increments pet count
     function onCatPet() {
