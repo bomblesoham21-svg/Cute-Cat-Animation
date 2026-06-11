@@ -224,7 +224,7 @@ body::after {
     box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15);
     
     /* Using monospace as a default crisp fallback for a pixel feel */
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Quattrocento', Courier, monospace;
     font-weight: bold;
     font-size: 1.1rem;
 }
