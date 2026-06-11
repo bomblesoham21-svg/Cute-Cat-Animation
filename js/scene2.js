@@ -64,7 +64,7 @@
             setTimeout(() => {
                 catSprite.src = "assets/cat1.png";
                 // Schedule next blink
-                blinkingTimeout = setTimeout(blink, 2900);
+                blinkingTimeout = setTimeout(blink, 2400);
             }, 150);
         }
 
