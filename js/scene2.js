@@ -17,9 +17,9 @@
         "Can we check GitHub again?",
         "Feed me code (and tuna)!",
         "I wish I could fly like the birds!",
-        "You look so cute 😽!",
-        "Stop touching me 😾",
-        "What are we doing today 😺?"
+        "You look so cute {name} 😽!",
+        "Stop touching me {name} 😾",
+        "{name},what are we doing today 😺?"
     ];
 
     // Counters
@@ -68,30 +68,40 @@
 
     // 2. Pet the cat - shows happy image and increments pet count
     function onCatPet() {
-        // Increment pet count
-        petCount++;
-        petCountEl.textContent = petCount;
+    // Increment pet count
+    petCount++;
+    petCountEl.textContent = petCount;
 
-        // Clear any existing happy timeout
-        if (happyTimeout) clearTimeout(happyTimeout);
+    // Clear any existing happy timeout
+    if (happyTimeout) clearTimeout(happyTimeout);
 
-        // Clear blinking timeout
-        if (blinkingTimeout) clearTimeout(blinkingTimeout);
+    // Clear blinking timeout
+    if (blinkingTimeout) clearTimeout(blinkingTimeout);
 
-        // Show happy face immediately
-        catSprite.src = "assets/cathappy.png";
+    // Show happy face immediately
+    catSprite.src = "assets/cathappy.png";
 
-        // Show random dialogue
-        const randomIndex = Math.floor(Math.random() * catDialogues.length);
-        dialogueText.textContent = catDialogues[randomIndex];
+    // 1. Fetch the current username (same logic as startScene2)
+    const name = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
 
-        // Return to normal cat after 800ms
-        happyTimeout = setTimeout(() => {
-            catSprite.src = "assets/cat1.png";
-            // Resume blinking loop
-            startBlinkingLoop();
-        }, 800);
-    }
+    // 2. Pick a random dialogue line
+    const randomIndex = Math.floor(Math.random() * catDialogues.length);
+    let chosenDialogue = catDialogues[randomIndex];
+
+    // 3. Replace the placeholder {name} with the actual name if it exists in the line
+    chosenDialogue = chosenDialogue.replace("{name}", name);
+
+    // 4. Display the modified dialogue
+    dialogueText.textContent = chosenDialogue;
+
+    // Return to normal cat after 800ms
+    happyTimeout = setTimeout(() => {
+        catSprite.src = "assets/cat1.png";
+        // Resume blinking loop
+        startBlinkingLoop();
+    }, 800);
+}
+
 
     // 3. Realistic Cat Blinking Loop
     function startBlinkingLoop() {
