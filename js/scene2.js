@@ -6,6 +6,19 @@
     const petCountEl = document.getElementById('pet-count');
     const feedCountEl = document.getElementById('feed-count');
 
+    // NEW: Asset configuration mapping for both cat options
+    const catAssets = {
+        orange: { prefix: 'cat1', folder: 'cat1' },
+        witch: { prefix: 'cat2', folder: 'witchcat' }
+    };
+    let currentCat = 'orange'; // Default active track
+
+    // Helper to dynamically get image paths based on active cat variant
+    function getCatAsset(type) {
+        const cat = catAssets[currentCat];
+        return `assets/${cat.folder}/${cat.prefix}${type}.png`;
+    }
+
     // Array of random pixel-style kitten quotes
     const catDialogues = [
         "Meow! What are we building today?",
@@ -41,83 +54,57 @@
     observer.observe(scene2, { attributes: true, attributeFilter: ['class'] });
 
     function startScene2() {
-    // 1. Retrieve the name from Scene 1 or fallback to LocalStorage, then default to Human
-    const name = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
-    
-    // 2. Persist the name in the browser storage for future visits
-    if (name !== "Human") {
-        localStorage.setItem('savedUserName', name);
+        const name = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
+        
+        if (name !== "Human") {
+            localStorage.setItem('savedUserName', name);
+        }
+        
+        dialogueText.textContent = `Hello, ${name}! Welcome to my world! 🐾`;
+
+        startBlinkingLoop();
+        catSprite.addEventListener('click', onCatPet);
+        setupFeedingSystem();
+        setupCatSelectionSystem(); // NEW: Fire selector setup
+        initKittenBackground();
     }
-    
-    // Initial customized greeting
-    dialogueText.textContent = `Hello, ${name}! Welcome to my world! 🐾`;
-
-    // Start the realistic eye-blinking loop
-    startBlinkingLoop();
-
-    // Attach click behavior for pet interaction
-    catSprite.addEventListener('click', onCatPet);
-
-    // Setup feeding system
-    setupFeedingSystem();
-
-    // Setup scene 2 background gradient
-    initKittenBackground();
-}
-
 
     // 2. Pet the cat - shows happy image and increments pet count
     function onCatPet() {
-    // Increment pet count
-    petCount++;
-    petCountEl.textContent = petCount;
+        petCount++;
+        petCountEl.textContent = petCount;
 
-    // Clear any existing happy timeout
-    if (happyTimeout) clearTimeout(happyTimeout);
+        if (happyTimeout) clearTimeout(happyTimeout);
+        if (blinkingTimeout) clearTimeout(blinkingTimeout);
 
-    // Clear blinking timeout
-    if (blinkingTimeout) clearTimeout(blinkingTimeout);
+        // MODIFIED: Uses dynamic pathing
+        catSprite.src = getCatAsset('happy');
 
-    // Show happy face immediately
-    catSprite.src = "assets/cat1/cathappy.png";
+        const name = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
+        const randomIndex = Math.floor(Math.random() * catDialogues.length);
+        let chosenDialogue = catDialogues[randomIndex];
+        chosenDialogue = chosenDialogue.replace("{name}", name);
+        dialogueText.textContent = chosenDialogue;
 
-    // 1. Fetch the current username (same logic as startScene2)
-    const name = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
-
-    // 2. Pick a random dialogue line
-    const randomIndex = Math.floor(Math.random() * catDialogues.length);
-    let chosenDialogue = catDialogues[randomIndex];
-
-    // 3. Replace the placeholder {name} with the actual name if it exists in the line
-    chosenDialogue = chosenDialogue.replace("{name}", name);
-
-    // 4. Display the modified dialogue
-    dialogueText.textContent = chosenDialogue;
-
-    // Return to normal cat after 800ms
-    happyTimeout = setTimeout(() => {
-        catSprite.src = "assets/cat1/cat1.png";
-        // Resume blinking loop
-        startBlinkingLoop();
-    }, 800);
-}
-
+        happyTimeout = setTimeout(() => {
+            // MODIFIED: Uses dynamic pathing base (empty string yields 'cat1.png' or 'cat2.png')
+            catSprite.src = getCatAsset('');
+            startBlinkingLoop();
+        }, 800);
+    }
 
     // 3. Realistic Cat Blinking Loop
     function startBlinkingLoop() {
         function blink() {
-            // Switch to blink image
-            catSprite.src = "assets/cat1/catblink.png";
+            // MODIFIED: Uses dynamic pathing
+            catSprite.src = getCatAsset('blink');
 
-            // Revert back to open eyes after a quick 150ms snap
             setTimeout(() => {
-                catSprite.src = "assets/cat1/cat1.png";
-                // Schedule next blink
+                // MODIFIED: Uses dynamic pathing base
+                catSprite.src = getCatAsset('');
                 blinkingTimeout = setTimeout(blink, 2900);
             }, 150);
         }
-
-        // Start the blinking cycle
         blinkingTimeout = setTimeout(blink, 2900);
     }
 
@@ -127,37 +114,68 @@
         if (!feedBtn || !catSprite) return;
 
         feedBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent triggering dialogue on click
+            e.stopPropagation(); 
 
             if (isFeeding) return;
             isFeeding = true;
 
-            // Increment feed count
             feedCount++;
             feedCountEl.textContent = feedCount;
 
-            // Clear the current blinking timeout
             if (blinkingTimeout) clearTimeout(blinkingTimeout);
             if (happyTimeout) clearTimeout(happyTimeout);
 
-            // Store the current sprite src to restore later
-            const originalSpriteSrc = catSprite.src;
-
-            // Change to eating sprite
-            catSprite.src = 'assets/cat1/cateat.png';
+            // MODIFIED: Uses dynamic pathing
+            catSprite.src = getCatAsset('eat');
             dialogueText.textContent = "Nom nom nom! 😋";
 
-            // Restore after feeding animation
+            释放after feeding animation
             setTimeout(() => {
-                catSprite.src = "assets/cat1/cat1.png";
+                // MODIFIED: Uses dynamic pathing base
+                catSprite.src = getCatAsset('');
                 dialogueText.textContent = "Thanks! That was yummy! 🐱";
                 isFeeding = false;
                 
-                // Resume blinking loop
                 startBlinkingLoop();
             }, 1500);
         });
     }
+
+    // 5. NEW: Cat Selection Menu Engine
+    function setupCatSelectionSystem() {
+        const selectBtn = document.getElementById('select-cat-btn');
+        const dropdown = document.getElementById('cat-dropdown');
+
+        // Toggle drop up display
+        selectBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('hidden');
+        });
+
+        // Dynamic change processor
+        dropdown.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                currentCat = item.getAttribute('data-cat');
+                
+                // Instantly update current sprite frame base
+                catSprite.src = getCatAsset('');
+                
+                // Close menu
+                dropdown.classList.add('hidden');
+
+                // Hard reset loop syncs to prevent graphic conflicts 
+                if (blinkingTimeout) clearTimeout(blinkingTimeout);
+                if (happyTimeout) clearTimeout(happyTimeout);
+                isFeeding = false;
+                startBlinkingLoop();
+            });
+        });
+
+        // Universal close hook if user clicks away
+        document.addEventListener('click', () => dropdown.classList.add('hidden'));
+    }
+}
+
 
     // 5. Scene 2 Background Gradient Animation
     function initKittenBackground() {
