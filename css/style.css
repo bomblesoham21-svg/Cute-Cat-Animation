@@ -378,3 +378,53 @@ body::after {
   border: none;
   pointer-events: none;
 }
+
+
+.cat-selector-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    z-index: 10;
+}
+
+#select-cat-btn {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.cat-dropdown {
+    background: white;
+    border: 2px solid #000;
+    border-radius: 8px;
+    margin-bottom: 8px; /* Pushes it directly above the button */
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.cat-dropdown.hidden {
+    display: none;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-family: 'Didact Gothic', sans-serif;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown-item img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
