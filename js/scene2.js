@@ -1,5 +1,5 @@
 // Wrap code in a block scope to prevent global variable pollution
-{
+
     const catSprite = document.getElementById('cat-sprite');
     const dialogueText = document.getElementById('dialogue-text');
     const scene2 = document.getElementById('scene-2');
@@ -174,7 +174,7 @@
         // Universal close hook if user clicks away
         document.addEventListener('click', () => dropdown.classList.add('hidden'));
     }
-}
+
 
 
     // 5. Scene 2 Background Gradient Animation
