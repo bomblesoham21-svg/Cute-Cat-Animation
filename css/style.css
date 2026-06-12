@@ -363,11 +363,19 @@ body::after {
 
 
 #footer {
-    /* Rich Editorial Typography */
-    font-family: 'Playfair Display', 'Didot', 'Inter', serif;
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-align: 'center';    /* Deep Satin Burgundy - incredible contrast on pale pink/white */
-    color: #3d2830; 
-    letter-spacing: 1.5px; /* High-end fashion branding feel */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 14px 0;
+  font-family: 'Didact Gothic', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #b08d57;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(176, 141, 87, 0.25);
 }
