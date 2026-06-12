@@ -129,7 +129,7 @@
             catSprite.src = getCatAsset('eat');
             dialogueText.textContent = "Nom nom nom! 😋";
 
-            释放after feeding animation
+            // after feeding animation
             setTimeout(() => {
                 // MODIFIED: Uses dynamic pathing base
                 catSprite.src = getCatAsset('');
