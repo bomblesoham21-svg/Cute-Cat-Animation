@@ -79,7 +79,7 @@
     if (blinkingTimeout) clearTimeout(blinkingTimeout);
 
     // Show happy face immediately
-    catSprite.src = "assets/cathappy.png";
+    catSprite.src = "assets/cat1/cathappy.png";
 
     // 1. Fetch the current username (same logic as startScene2)
     const name = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
@@ -96,7 +96,7 @@
 
     // Return to normal cat after 800ms
     happyTimeout = setTimeout(() => {
-        catSprite.src = "assets/cat1.png";
+        catSprite.src = "assets/cat1/cat1.png";
         // Resume blinking loop
         startBlinkingLoop();
     }, 800);
@@ -107,11 +107,11 @@
     function startBlinkingLoop() {
         function blink() {
             // Switch to blink image
-            catSprite.src = "assets/catblink.png";
+            catSprite.src = "assets/cat1/catblink.png";
 
             // Revert back to open eyes after a quick 150ms snap
             setTimeout(() => {
-                catSprite.src = "assets/cat1.png";
+                catSprite.src = "assets/cat1/cat1.png";
                 // Schedule next blink
                 blinkingTimeout = setTimeout(blink, 2900);
             }, 150);
@@ -144,12 +144,12 @@
             const originalSpriteSrc = catSprite.src;
 
             // Change to eating sprite
-            catSprite.src = 'assets/cateat.png';
+            catSprite.src = 'assets/cat1/cateat.png';
             dialogueText.textContent = "Nom nom nom! 😋";
 
             // Restore after feeding animation
             setTimeout(() => {
-                catSprite.src = "assets/cat1.png";
+                catSprite.src = "assets/cat1/cat1.png";
                 dialogueText.textContent = "Thanks! That was yummy! 🐱";
                 isFeeding = false;
                 
