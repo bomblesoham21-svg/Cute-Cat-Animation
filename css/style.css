@@ -360,3 +360,14 @@ body::after {
     transform: translateY(0px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
+
+
+#footer {
+    /* Rich Editorial Typography */
+    font-family: 'Playfair Display', 'Didot', 'Inter', serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-align: 'center';    /* Deep Satin Burgundy - incredible contrast on pale pink/white */
+    color: #3d2830; 
+    letter-spacing: 1.5px; /* High-end fashion branding feel */
+}
