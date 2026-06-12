@@ -78,12 +78,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const scene2 = document.getElementById('scene-2');
 
     if (confirmBtn && usernameInput) {
-        confirmBtn.addEventListener('click', () => {
+        confirmBtn.addEventListener('click',async () => {
             const username = usernameInput.value.trim();
+            
             if (username === "") {
                 alert("Please enter your name first!");
                 return;
             }
+            
+            await supabaseClient
+                .from('visitors')
+                .insert([
+        {
+            username: username
+        }
+    ]);
             window.currentUserName = username;
             if (scene1) scene1.classList.add('hidden');
             setTimeout(() => {
