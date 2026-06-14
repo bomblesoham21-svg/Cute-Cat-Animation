@@ -393,7 +393,39 @@ body::after {
 #select-cat-btn {
     padding: 8px 16px;
     cursor: pointer;
+    
+    /* Retro Typography */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #4A1525; /* Deep berry for contrast */
+
+    /* Vintage Color Palette */
+    background-color: #FFF0F5; /* Lavender blush */
+    border: 3px solid #4A1525;
+    border-radius: 4px;
+
+    /* 90s Pop-Out 3D Effect */
+    box-shadow: 4px 4px 0px #FF69B4; /* Hot pink shadow */
+    
+    /* Smooth Interaction */
+    transition: all 0.1s ease-in-out;
 }
+
+/* Tactile Click Effect */
+#select-cat-btn:hover {
+    background-color: #FFE4E1; /* Misty rose */
+    box-shadow: 2px 2px 0px #FF69B4;
+    transform: translate(2px, 2px);
+}
+
+#select-cat-btn:active {
+    box-shadow: 0px 0px 0px #FF69B4;
+    transform: translate(4px, 4px);
+}
+
 
 .cat-dropdown {
     background: white;
