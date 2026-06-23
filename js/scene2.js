@@ -303,40 +303,22 @@
         drawKittenFluid();
     }
 
-    // 6. Transition to Chat Scene (catchat.js)
-    const openChatFromScene2Btn = document.getElementById("open-chat-btn");
-    if (openChatFromScene2Btn) {
-        openChatFromScene2Btn.addEventListener("click", () => {
-            console.log("Scene 2: Activating Chat Scene.");
-            // Hide Scene 2 elements or container
-            scene2.classList.add("hidden");
-            window.catInteractionEnabled = false; // Pause Scene 2 interactions
-
-            // Trigger the display of the Chat Scene (catchat.js overlay)
-            // This assumes catchat.js is already loaded and its elements are in the DOM
-            const chatOverlay = document.getElementById("chat-overlay");
-            const chatActiveCatSprite = document.getElementById("chat-active-cat-sprite");
-            
-            if (chatOverlay && chatActiveCatSprite) {
-                // Pass current cat sprite from Scene 2 to Chat Scene
-                chatActiveCatSprite.src = catSprite.src; 
-                chatOverlay.classList.remove("hidden");
-                chatOverlay.style.opacity = "0";
-                setTimeout(() => {
-                    chatOverlay.style.opacity = "1";
-                }, 10);
-            } else {
-                console.error("Chat Scene elements not found or not ready.");
-            }
-        });
-    }
-
+    
     // Global function to be called by catchat.js when it wants to return control to scene2.js
-    window.returnToScene2 = () => {
-        console.log("Scene 2: Returning control from Chat Scene.");
-        // Show Scene 2 elements
-        scene2.classList.remove("hidden"); 
-        window.catInteractionEnabled = true; // Re-enable Scene 2 interactions
-        startBlinkingLoop(); // Resume Scene 2's blinking loop
-    };
+    window.returnToScene2 = function () {
+
+    const layout = document.querySelector(".scene2-layout");
+    const counters = document.querySelector(".counter-bars");
+    const feedBtn = document.querySelector(".feed-btn");
+    const selector = document.querySelector(".cat-selector-container");
+    const chatTrigger = document.getElementById("open-chat-btn");
+
+    layout?.classList.remove("chat-mode-hidden");
+    counters?.classList.remove("chat-mode-hidden");
+    feedBtn?.classList.remove("chat-mode-hidden");
+    selector?.classList.remove("chat-mode-hidden");
+    chatTrigger?.classList.remove("chat-mode-hidden");
+
+    window.catInteractionEnabled = true;
+};
 }
