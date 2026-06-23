@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         animationFrameId = requestAnimationFrame(animateGradient);
     }
 
+    // Start the background animation
     animateGradient();
 
     // Scene Transition Control
@@ -87,23 +88,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
+            // Send data to Supabase
             await supabaseClient
                 .from('visitors')
-                .insert([
-        {
-            username: username
-        }
-    ]);
+                .insert([{ username: username }]);
+                
             window.currentUserName = username;
             
-            // Stop the Scene 1 background animation to prevent conflicts with Scene 2's canvas drawing
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-            }
-            
-            // Smooth crossfade transition: both scenes fade simultaneously via CSS (1s ease)
+            // 1. Trigger your CSS opacity transitions immediately
             if (scene1) scene1.classList.add('hidden');
             if (scene2) scene2.classList.remove('hidden');
+            
+            // 2. Wait exactly 1 second (matching your CSS 1s ease-in-out transition) 
+            // before turning off the canvas loop to prevent any visual stuttering.
+            setTimeout(() => {
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                }
+            }, 1000);
         });
     }
 });
