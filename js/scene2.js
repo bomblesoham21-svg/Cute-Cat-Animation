@@ -57,7 +57,18 @@
                 "Nyan~ Happy to see you, {name}!"
             ],
             feedDialogues: ["Itadakimasu! 🍣", "Oishii! 🐱", "Thank you for the delicious meal!"]
-        }
+        },
+        Golden: {
+            prefix: 'cat5',
+            folder: 'GoldenCat',
+            dialogues : [
+                "Do you wan some money 💰?",
+                "Buy me some food {name}!",
+                "Thank you, take this gold coin 🪙😼",
+                "I am Elon's Cat 💰💸!"
+                ],
+            feedDialogues: ["Feed me some gold bruda", "Woah! tastes golden...",
+                            "Thanks for the treat 😼!", "Pls give me some golden biscuits 🍪🐱..."]
     };
     
     let currentCat = 'orange'; // Default active track
