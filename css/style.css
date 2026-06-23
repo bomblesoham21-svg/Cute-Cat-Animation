@@ -467,6 +467,13 @@ body::after {
    ========================================================================== */
 
 /* Bottom Left Main Entry Button */
+.chat-mode-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .35s ease;
+}
+
 .chat-trigger-btn {
     position: absolute;
     bottom: 25px;
