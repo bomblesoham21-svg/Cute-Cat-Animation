@@ -304,7 +304,7 @@
     }
 
     // 6. Transition to Chat Scene (catchat.js)
-    const openChatFromScene2Btn = document.getElementById("open-chat-from-scene2-btn");
+    const openChatFromScene2Btn = document.getElementById("open-chat-btn");
     if (openChatFromScene2Btn) {
         openChatFromScene2Btn.addEventListener("click", () => {
             console.log("Scene 2: Activating Chat Scene.");
