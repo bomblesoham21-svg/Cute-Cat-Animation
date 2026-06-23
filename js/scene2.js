@@ -9,7 +9,9 @@
     // NEW: Asset configuration mapping for both cat options
     const catAssets = {
         orange: { prefix: 'cat1', folder: 'cat1' },
-        witch: { prefix: 'cat2', folder: 'witchcat' }
+        witch: { prefix: 'cat2', folder: 'witchcat' },
+        frost: { prefix: 'cat3', folder: 'frostcat' },
+        Japanese: { prefix: 'cat4', folder: 'Japanesecat'}
     };
     let currentCat = 'orange'; // Default active track
 
