@@ -1,10 +1,10 @@
 // Wrap code in a block scope to prevent global variable pollution
 {
-    const catSprite = document.getElementById('cat-sprite');
-    const dialogueText = document.getElementById('dialogue-text');
-    const scene2 = document.getElementById('scene-2');
-    const petCountEl = document.getElementById('pet-count');
-    const feedCountEl = document.getElementById('feed-count');
+    const catSprite = document.getElementById("cat-sprite");
+    const dialogueText = document.getElementById("dialogue-text");
+    const scene2 = document.getElementById("scene-2");
+    const petCountEl = document.getElementById("pet-count");
+    const feedCountEl = document.getElementById("feed-count");
 
     // Global state hook for future cat.js AI integration
     // When cat.js boots up the chat, it can set window.catInteractionEnabled = false;
@@ -14,8 +14,8 @@
     // Easily scalable! Just add a new key here when adding a new cat.
     const catAssets = {
         orange: { 
-            prefix: 'cat1', 
-            folder: 'cat1',
+            prefix: "cat1", 
+            folder: "cat1",
             dialogues: [
                 "Meow! What are we building today?",
                 "I'm coding at 200 meows per minute.",
@@ -25,8 +25,8 @@
             feedDialogues: ["Nom nom nom! 😋", "Mmm, orange cats love snacks!", "Delicious base-level fuel!"]
         },
         witch: { 
-            prefix: 'cat2', 
-            folder: 'witchcat',
+            prefix: "cat2", 
+            folder: "witchcat",
             dialogues: [
                 "Double, double, toil and trouble... or just coding bugs?",
                 "Did you bring any eye of newt, {name}?",
@@ -37,8 +37,8 @@
             feedDialogues: ["A magical feast! 🔮", "This brew pleases me.", "Nom... tastes like stardust!"]
         },
         frost: { 
-            prefix: 'cat3', 
-            folder: 'frostcat',
+            prefix: "cat3", 
+            folder: "frostcat",
             dialogues: [
                 "Brrr... stays cool under compilation pressure.",
                 "Everything looks frozen from up here!",
@@ -48,19 +48,19 @@
             feedDialogues: ["Brain freeze! Just kidding, yum! ❄️", "Refreshing!", "Nom nom... frozen treats!"]
         },
         Japanese: { 
-            prefix: 'cat4', 
-            folder: 'Japanesecat',
+            prefix: "cat4", 
+            folder: "Japanesecat",
             dialogues: [
                 "Konnichiwa! Let's do our best today!",
                 "Purr... that tickles! Arigatou!",
                 "Can we check GitHub again?",
-                "Nyan\~ Happy to see you, {name}!"
+                "Nyan~ Happy to see you, {name}!"
             ],
             feedDialogues: ["Itadakimasu! 🍣", "Oishii! 🐱", "Thank you for the delicious meal!"]
         },
         Golden: {
-            prefix: 'cat5',
-            folder: 'Goldencat',  // Fixed case to match actual assets/Goldencat directory
+            prefix: "cat5",
+            folder: "Goldencat",  // Fixed case to match actual assets/Goldencat directory
             dialogues : [
                 "Do you wan some money 💰?",
                 "Buy me some food {name}!",
@@ -72,7 +72,7 @@
         }
     };
     
-    let currentCat = 'orange'; // Default active track
+    let currentCat = "orange"; // Default active track
 
     // Helper to dynamically get image paths based on active cat variant
     function getCatAsset(type) {
@@ -81,14 +81,14 @@
     }
 
     // NEW: Helper to get a random dynamic line based on the active cat type
-    function getRandomCatDialogue(actionType = 'pet') {
+    function getRandomCatDialogue(actionType = "pet") {
         const cat = catAssets[currentCat];
-        const pool = actionType === 'feed' ? cat.feedDialogues : cat.dialogues;
+        const pool = actionType === "feed" ? cat.feedDialogues : cat.dialogues;
         
         // Fallback to generic if a specific pool isn't defined yet
         if (!pool || pool.length === 0) return "Meow!";
         
-        const name = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
+        const name = window.currentUserName || localStorage.getItem("savedUserName") || "Human";
         const randomIndex = Math.floor(Math.random() * pool.length);
         return pool[randomIndex].replace(/{name}/g, name);
     }
@@ -103,25 +103,25 @@
 
     // 1. Monitor when Scene 2 reveals itself to trigger initial greeting
     const observer = new MutationObserver(() => {
-        if (!scene2.classList.contains('hidden') && !initialized) {
+        if (!scene2.classList.contains("hidden") && !initialized) {
             initialized = true;
             startScene2();
         }
     });
 
-    observer.observe(scene2, { attributes: true, attributeFilter: ['class'] });
+    observer.observe(scene2, { attributes: true, attributeFilter: ["class"] });
 
     function startScene2() {
-        const name = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
+        const name = window.currentUserName || localStorage.getItem("savedUserName") || "Human";
         
         if (name !== "Human") {
-            localStorage.setItem('savedUserName', name);
+            localStorage.setItem("savedUserName", name);
         }
         
         dialogueText.textContent = `Hello, ${name}! Welcome to my world! 🐾`;
 
         startBlinkingLoop();
-        catSprite.addEventListener('click', onCatPet);
+        catSprite.addEventListener("click", onCatPet);
         setupFeedingSystem();
         setupCatSelectionSystem(); 
         initKittenBackground();
@@ -138,13 +138,13 @@
         if (happyTimeout) clearTimeout(happyTimeout);
         if (blinkingTimeout) clearTimeout(blinkingTimeout);
 
-        catSprite.src = getCatAsset('happy');
+        catSprite.src = getCatAsset("happy");
 
         // MODIFIED: Pulled from specific cat dialogue array
-        dialogueText.textContent = getRandomCatDialogue('pet');
+        dialogueText.textContent = getRandomCatDialogue("pet");
 
         happyTimeout = setTimeout(() => {
-            catSprite.src = getCatAsset('');
+            catSprite.src = getCatAsset("");
             startBlinkingLoop();
         }, 800);
     }
@@ -156,11 +156,11 @@
 
         function blink() {
             if (!window.catInteractionEnabled) return;
-            catSprite.src = getCatAsset('blink');
+            catSprite.src = getCatAsset("blink");
 
             setTimeout(() => {
                 if (!window.catInteractionEnabled) return;
-                catSprite.src = getCatAsset('');
+                catSprite.src = getCatAsset("");
                 blinkingTimeout = setTimeout(blink, 2900);
             }, 150);
         }
@@ -169,10 +169,10 @@
 
     // 4. Feeding System
     function setupFeedingSystem() {
-        const feedBtn = document.querySelector('.feed-btn');
+        const feedBtn = document.querySelector(".feed-btn");
         if (!feedBtn || !catSprite) return;
 
-        feedBtn.addEventListener('click', (e) => {
+        feedBtn.addEventListener("click", (e) => {
             e.stopPropagation(); 
 
             // AI CHAT GUARD
@@ -186,10 +186,10 @@
             if (blinkingTimeout) clearTimeout(blinkingTimeout);
             if (happyTimeout) clearTimeout(happyTimeout);
 
-            catSprite.src = getCatAsset('eat');
+            catSprite.src = getCatAsset("eat");
             
             // MODIFIED: Uses cat-specific feeding dialogue
-            dialogueText.textContent = getRandomCatDialogue('feed');
+            dialogueText.textContent = getRandomCatDialogue("feed");
 
             // after feeding animation
             setTimeout(() => {
@@ -199,7 +199,7 @@
                     return;
                 }
 
-                catSprite.src = getCatAsset('');
+                catSprite.src = getCatAsset("");
                 dialogueText.textContent = "Thanks! That was yummy! 🐱";
                 isFeeding = false;
                 
@@ -210,22 +210,22 @@
 
     // 5. Cat Selection Menu Engine
     function setupCatSelectionSystem() {
-        const selectBtn = document.getElementById('select-cat-btn');
-        const dropdown = document.getElementById('cat-dropdown');
+        const selectBtn = document.getElementById("select-cat-btn");
+        const dropdown = document.getElementById("cat-dropdown");
 
-        selectBtn.addEventListener('click', (e) => {
+        selectBtn.addEventListener("click", (e) => {
             if (!window.catInteractionEnabled) return;
             e.stopPropagation();
-            dropdown.classList.toggle('hidden');
+            dropdown.classList.toggle("hidden");
         });
 
-        dropdown.querySelectorAll('.dropdown-item').forEach(item => {
-            item.addEventListener('click', (e) => {
+        dropdown.querySelectorAll(".dropdown-item").forEach(item => {
+            item.addEventListener("click", (e) => {
                 if (!window.catInteractionEnabled) return;
-                currentCat = item.getAttribute('data-cat');
+                currentCat = item.getAttribute("data-cat");
                 
-                catSprite.src = getCatAsset('');
-                dropdown.classList.add('hidden');
+                catSprite.src = getCatAsset("");
+                dropdown.classList.add("hidden");
 
                 if (blinkingTimeout) clearTimeout(blinkingTimeout);
                 if (happyTimeout) clearTimeout(happyTimeout);
@@ -234,19 +234,19 @@
             });
         });
 
-        document.addEventListener('click', () => dropdown.classList.add('hidden'));
+        document.addEventListener("click", () => dropdown.classList.add("hidden"));
     }
 
     // 5. Scene 2 Background Gradient Animation
     function initKittenBackground() {
-        const canvas = document.getElementById('gradient-canvas');
+        const canvas = document.getElementById("gradient-canvas");
         if (!canvas) return;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
 
         let width = canvas.width = window.innerWidth;
         let height = canvas.height = window.innerHeight;
 
-        window.addEventListener('resize', () => {
+        window.addEventListener("resize", () => {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
         });
@@ -271,35 +271,72 @@
             const r1 = Math.max(width, height) * 0.75;
             let g1 = ctx.createRadialGradient(x1, y1, 0, x1, y1, r1);
             g1.addColorStop(0, `rgba(${palette.c1.r}, ${palette.c1.g}, ${palette.c1.b}, 0.8)`);
-            g1.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            g1.addColorStop(1, "rgba(255, 255, 255, 0)");
             ctx.fillStyle = g1;
             ctx.fillRect(0, 0, width, height);
 
-            ctx.globalCompositeOperation = 'multiply';
+            ctx.globalCompositeOperation = "multiply";
             const x2 = width * 0.3 + Math.cos(tick * 0.8) * (width * 0.25);
             const y2 = height * 0.7 + Math.sin(tick * 1.2) * (height * 0.15);
             const r2 = Math.max(width, height) * 0.6;
             let g2 = ctx.createRadialGradient(x2, y2, 0, x2, y2, r2);
             g2.addColorStop(0, `rgba(${palette.c2.r}, ${palette.c2.g}, ${palette.c2.b}, 0.6)`);
-            g2.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            g2.addColorStop(1, "rgba(255, 255, 255, 0)");
             ctx.fillStyle = g2;
             ctx.fillRect(0, 0, width, height);
 
-            ctx.globalCompositeOperation = 'screen';
+            ctx.globalCompositeOperation = "screen";
             const x3 = width * 0.7 + Math.sin(tick * 0.9) * (width * 0.2);
             const y3 = height * 0.2 + Math.cos(tick * 1.0) * (height * 0.2);
             const r3 = Math.max(width, height) * 0.55;
             let g3 = ctx.createRadialGradient(x3, y3, 0, x3, y3, r3);
             g3.addColorStop(0, `rgba(${palette.c3.r}, ${palette.c3.g}, ${palette.c3.b}, 0.45)`);
-            g3.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            g3.addColorStop(1, "rgba(255, 255, 255, 0)");
             ctx.fillStyle = g3;
             ctx.fillRect(0, 0, width, height);
 
-            ctx.globalCompositeOperation = 'source-over';
+            ctx.globalCompositeOperation = "source-over";
 
             requestAnimationFrame(drawKittenFluid);
         }
 
         drawKittenFluid();
     }
+
+    // 6. Transition to Chat Scene (catchat.js)
+    const openChatFromScene2Btn = document.getElementById("open-chat-from-scene2-btn");
+    if (openChatFromScene2Btn) {
+        openChatFromScene2Btn.addEventListener("click", () => {
+            console.log("Scene 2: Activating Chat Scene.");
+            // Hide Scene 2 elements or container
+            scene2.classList.add("hidden");
+            window.catInteractionEnabled = false; // Pause Scene 2 interactions
+
+            // Trigger the display of the Chat Scene (catchat.js overlay)
+            // This assumes catchat.js is already loaded and its elements are in the DOM
+            const chatOverlay = document.getElementById("chat-overlay");
+            const chatActiveCatSprite = document.getElementById("chat-active-cat-sprite");
+            
+            if (chatOverlay && chatActiveCatSprite) {
+                // Pass current cat sprite from Scene 2 to Chat Scene
+                chatActiveCatSprite.src = catSprite.src; 
+                chatOverlay.classList.remove("hidden");
+                chatOverlay.style.opacity = "0";
+                setTimeout(() => {
+                    chatOverlay.style.opacity = "1";
+                }, 10);
+            } else {
+                console.error("Chat Scene elements not found or not ready.");
+            }
+        });
+    }
+
+    // Global function to be called by catchat.js when it wants to return control to scene2.js
+    window.returnToScene2 = () => {
+        console.log("Scene 2: Returning control from Chat Scene.");
+        // Show Scene 2 elements
+        scene2.classList.remove("hidden"); 
+        window.catInteractionEnabled = true; // Re-enable Scene 2 interactions
+        startBlinkingLoop(); // Resume Scene 2's blinking loop
+    };
 }
