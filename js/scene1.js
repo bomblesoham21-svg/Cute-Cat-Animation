@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ctx = canvas.getContext('2d');
 
     let width, height;
+    let animationFrameId; // For cancelling animation on transition
 
     function resize() {
         width = canvas.width = window.innerWidth;
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset blend mode for UI layer clarity
         ctx.globalCompositeOperation = 'source-over';
 
-        requestAnimationFrame(animateGradient);
+        animationFrameId = requestAnimationFrame(animateGradient);
     }
 
     animateGradient();
@@ -78,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scene2 = document.getElementById('scene-2');
 
     if (confirmBtn && usernameInput) {
-        confirmBtn.addEventListener('click',async () => {
+        confirmBtn.addEventListener('click', async () => {
             const username = usernameInput.value.trim();
             
             if (username === "") {
@@ -94,10 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ]);
             window.currentUserName = username;
+            
+            // Stop the Scene 1 background animation to prevent conflicts with Scene 2's canvas drawing
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            
+            // Smooth crossfade transition: both scenes fade simultaneously via CSS (1s ease)
             if (scene1) scene1.classList.add('hidden');
-            setTimeout(() => {
-                if (scene2) scene2.classList.remove('hidden');
-            }, 1000);
+            if (scene2) scene2.classList.remove('hidden');
         });
     }
 });
