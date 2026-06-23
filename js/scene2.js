@@ -69,6 +69,7 @@
                 ],
             feedDialogues: ["Feed me some gold bruda", "Woah! tastes golden...",
                             "Thanks for the treat 😼!", "Pls give me some golden biscuits 🍪🐱..."]
+        }
     };
     
     let currentCat = 'orange'; // Default active track
