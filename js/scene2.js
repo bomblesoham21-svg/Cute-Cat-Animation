@@ -6,13 +6,60 @@
     const petCountEl = document.getElementById('pet-count');
     const feedCountEl = document.getElementById('feed-count');
 
-    // NEW: Asset configuration mapping for both cat options
+    // Global state hook for future cat.js AI integration
+    // When cat.js boots up the chat, it can set window.catInteractionEnabled = false;
+    window.catInteractionEnabled = true;
+
+    // MODIFIED: Added unique dialogue profiles for each cat.
+    // Easily scalable! Just add a new key here when adding a new cat.
     const catAssets = {
-        orange: { prefix: 'cat1', folder: 'cat1' },
-        witch: { prefix: 'cat2', folder: 'witchcat' },
-        frost: { prefix: 'cat3', folder: 'frostcat' },
-        Japanese: { prefix: 'cat4', folder: 'Japanesecat'}
+        orange: { 
+            prefix: 'cat1', 
+            folder: 'cat1',
+            dialogues: [
+                "Meow! What are we building today?",
+                "I'm coding at 200 meows per minute.",
+                "Feed me code (and tuna)!",
+                "You look so cute {name} 😽!"
+            ],
+            feedDialogues: ["Nom nom nom! 😋", "Mmm, orange cats love snacks!", "Delicious base-level fuel!"]
+        },
+        witch: { 
+            prefix: 'cat2', 
+            folder: 'witchcat',
+            dialogues: [
+                "Double, double, toil and trouble... or just coding bugs?",
+                "Did you bring any eye of newt, {name}?",
+                "Error 404: Spell interrupted.",
+                "Stop touching me {name} 😾",
+                "Are we cursed?"
+            ],
+            feedDialogues: ["A magical feast! 🔮", "This brew pleases me.", "Nom... tastes like stardust!"]
+        },
+        frost: { 
+            prefix: 'cat3', 
+            folder: 'frostcat',
+            dialogues: [
+                "Brrr... stays cool under compilation pressure.",
+                "Everything looks frozen from up here!",
+                "I wish I could fly like the icy blizzards!",
+                "{name}, what cold-blooded programming are we doing today? 😺"
+            ],
+            feedDialogues: ["Brain freeze! Just kidding, yum! ❄️", "Refreshing!", "Nom nom... frozen treats!"]
+        },
+        Japanese: { 
+            prefix: 'cat4', 
+            folder: 'Japanesecat',
+            dialogues: [
+                "Konnichiwa! Let's do our best today!",
+                "Purr... that tickles! Arigatou!",
+                "Can we check GitHub again?",
+                "Nyan~ Happy to see you, {name}!"
+            ],
+            feedDialogues: ["Itadakimasu! 🍣", "Oishii! 🐱", "Thank you for the delicious meal!"]
+        }
     };
+    
     let currentCat = 'orange'; // Default active track
 
     // Helper to dynamically get image paths based on active cat variant
@@ -21,21 +68,18 @@
         return `assets/${cat.folder}/${cat.prefix}${type}.png`;
     }
 
-    // Array of random pixel-style kitten quotes
-    const catDialogues = [
-        "Meow! What are we building today?",
-        "Purr... that tickles!",
-        "Did you bring any treats?",
-        "Error 404: Catnap interrupted.",
-        "I'm coding at 200 meows per minute.",
-        "Everything looks perfect from up here!",
-        "Can we check GitHub again?",
-        "Feed me code (and tuna)!",
-        "I wish I could fly like the birds!",
-        "You look so cute {name} 😽!",
-        "Stop touching me {name} 😾",
-        "{name},what are we doing today 😺?"
-    ];
+    // NEW: Helper to get a random dynamic line based on the active cat type
+    function getRandomCatDialogue(actionType = 'pet') {
+        const cat = catAssets[currentCat];
+        const pool = actionType === 'feed' ? cat.feedDialogues : cat.dialogues;
+        
+        // Fallback to generic if a specific pool isn't defined yet
+        if (!pool || pool.length === 0) return "Meow!";
+        
+        const name = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
+        const randomIndex = Math.floor(Math.random() * pool.length);
+        return pool[randomIndex].replace(/{name}/g, name);
+    }
 
     // Counters
     let petCount = 0;
@@ -67,29 +111,27 @@
         startBlinkingLoop();
         catSprite.addEventListener('click', onCatPet);
         setupFeedingSystem();
-        setupCatSelectionSystem(); // NEW: Fire selector setup
+        setupCatSelectionSystem(); 
         initKittenBackground();
     }
 
-    // 2. Pet the cat - shows happy image and increments pet count
+    // 2. Pet the cat
     function onCatPet() {
+        // AI CHAT GUARD: If AI chat is active, prevent standard pet interactions
+        if (!window.catInteractionEnabled) return;
+
         petCount++;
         petCountEl.textContent = petCount;
 
         if (happyTimeout) clearTimeout(happyTimeout);
         if (blinkingTimeout) clearTimeout(blinkingTimeout);
 
-        // MODIFIED: Uses dynamic pathing
         catSprite.src = getCatAsset('happy');
 
-        const name = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
-        const randomIndex = Math.floor(Math.random() * catDialogues.length);
-        let chosenDialogue = catDialogues[randomIndex];
-        chosenDialogue = chosenDialogue.replace("{name}", name);
-        dialogueText.textContent = chosenDialogue;
+        // MODIFIED: Pulled from specific cat dialogue array
+        dialogueText.textContent = getRandomCatDialogue('pet');
 
         happyTimeout = setTimeout(() => {
-            // MODIFIED: Uses dynamic pathing base (empty string yields 'cat1.png' or 'cat2.png')
             catSprite.src = getCatAsset('');
             startBlinkingLoop();
         }, 800);
@@ -97,12 +139,15 @@
 
     // 3. Realistic Cat Blinking Loop
     function startBlinkingLoop() {
+        // AI CHAT GUARD: Stops ambient blinking routine if AI chat handles everything
+        if (!window.catInteractionEnabled) return;
+
         function blink() {
-            // MODIFIED: Uses dynamic pathing
+            if (!window.catInteractionEnabled) return;
             catSprite.src = getCatAsset('blink');
 
             setTimeout(() => {
-                // MODIFIED: Uses dynamic pathing base
+                if (!window.catInteractionEnabled) return;
                 catSprite.src = getCatAsset('');
                 blinkingTimeout = setTimeout(blink, 2900);
             }, 150);
@@ -118,6 +163,8 @@
         feedBtn.addEventListener('click', (e) => {
             e.stopPropagation(); 
 
+            // AI CHAT GUARD
+            if (!window.catInteractionEnabled) return;
             if (isFeeding) return;
             isFeeding = true;
 
@@ -127,13 +174,19 @@
             if (blinkingTimeout) clearTimeout(blinkingTimeout);
             if (happyTimeout) clearTimeout(happyTimeout);
 
-            // MODIFIED: Uses dynamic pathing
             catSprite.src = getCatAsset('eat');
-            dialogueText.textContent = "Nom nom nom! 😋";
+            
+            // MODIFIED: Uses cat-specific feeding dialogue
+            dialogueText.textContent = getRandomCatDialogue('feed');
 
             // after feeding animation
             setTimeout(() => {
-                // MODIFIED: Uses dynamic pathing base
+                // If AI chat gained control mid-feed, don't revert scene text/states
+                if (!window.catInteractionEnabled) {
+                    isFeeding = false;
+                    return;
+                }
+
                 catSprite.src = getCatAsset('');
                 dialogueText.textContent = "Thanks! That was yummy! 🐱";
                 isFeeding = false;
@@ -143,29 +196,25 @@
         });
     }
 
-    // 5. NEW: Cat Selection Menu Engine
+    // 5. Cat Selection Menu Engine
     function setupCatSelectionSystem() {
         const selectBtn = document.getElementById('select-cat-btn');
         const dropdown = document.getElementById('cat-dropdown');
 
-        // Toggle drop up display
         selectBtn.addEventListener('click', (e) => {
+            if (!window.catInteractionEnabled) return;
             e.stopPropagation();
             dropdown.classList.toggle('hidden');
         });
 
-        // Dynamic change processor
         dropdown.querySelectorAll('.dropdown-item').forEach(item => {
             item.addEventListener('click', (e) => {
+                if (!window.catInteractionEnabled) return;
                 currentCat = item.getAttribute('data-cat');
                 
-                // Instantly update current sprite frame base
                 catSprite.src = getCatAsset('');
-                
-                // Close menu
                 dropdown.classList.add('hidden');
 
-                // Hard reset loop syncs to prevent graphic conflicts 
                 if (blinkingTimeout) clearTimeout(blinkingTimeout);
                 if (happyTimeout) clearTimeout(happyTimeout);
                 isFeeding = false;
@@ -173,11 +222,8 @@
             });
         });
 
-        // Universal close hook if user clicks away
         document.addEventListener('click', () => dropdown.classList.add('hidden'));
     }
-
-
 
     // 5. Scene 2 Background Gradient Animation
     function initKittenBackground() {
@@ -193,25 +239,21 @@
             height = canvas.height = window.innerHeight;
         });
 
-        // Premium Soft Pastel Kitten Palette
         const palette = {
-            base: { r: 255, g: 245, b: 246 }, // Pale Dreamy White Base
-            c1: { r: 255, g: 214, b: 220 },   // Soft Blush Pink
-            c2: { r: 244, g: 232, b: 250 },   // Light Lavender Mist
-            c3: { r: 224, g: 140, b: 195 }    // Soft, Gentle Magenta
+            base: { r: 255, g: 245, b: 246 }, 
+            c1: { r: 255, g: 214, b: 220 },   
+            c2: { r: 244, g: 232, b: 250 },   
+            c3: { r: 224, g: 140, b: 195 }    
         };
 
         let tick = 0;
 
         function drawKittenFluid() {
-            // Super slow, airy, whimsical movement pace
             tick += 0.0012;
 
-            // 1. Fill base pale white layer
             ctx.fillStyle = `rgb(${palette.base.r}, ${palette.base.g}, ${palette.base.b})`;
             ctx.fillRect(0, 0, width, height);
 
-            // 2. Layer 1: Soft Blush Pink drifting flow
             const x1 = width * 0.5 + Math.sin(tick * 1.1 + 1.5) * (width * 0.2);
             const y1 = height * 0.5 + Math.cos(tick * 0.9 + 0.5) * (height * 0.2);
             const r1 = Math.max(width, height) * 0.75;
@@ -221,7 +263,6 @@
             ctx.fillStyle = g1;
             ctx.fillRect(0, 0, width, height);
 
-            // 3. Layer 2: Lavender Mist glow bleed
             ctx.globalCompositeOperation = 'multiply';
             const x2 = width * 0.3 + Math.cos(tick * 0.8) * (width * 0.25);
             const y2 = height * 0.7 + Math.sin(tick * 1.2) * (height * 0.15);
@@ -232,7 +273,6 @@
             ctx.fillStyle = g2;
             ctx.fillRect(0, 0, width, height);
 
-            // 4. Layer 3: Soft Dreamy Magenta accents
             ctx.globalCompositeOperation = 'screen';
             const x3 = width * 0.7 + Math.sin(tick * 0.9) * (width * 0.2);
             const y3 = height * 0.2 + Math.cos(tick * 1.0) * (height * 0.2);
@@ -243,7 +283,6 @@
             ctx.fillStyle = g3;
             ctx.fillRect(0, 0, width, height);
 
-            // Reset system blend mode so cat graphics render cleanly
             ctx.globalCompositeOperation = 'source-over';
 
             requestAnimationFrame(drawKittenFluid);
