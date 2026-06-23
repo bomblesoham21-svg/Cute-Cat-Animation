@@ -77,7 +77,7 @@
     // Helper to dynamically get image paths based on active cat variant
     function getCatAsset(type) {
         const cat = catAssets[currentCat];
-        return `assets/\( {cat.folder}/ \){cat.prefix}${type}.png`;
+        return "assets/" + cat.folder + "/" + cat.prefix + type + ".png";
     }
 
     // NEW: Helper to get a random dynamic line based on the active cat type
