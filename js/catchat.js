@@ -32,6 +32,7 @@
         }, 10);
     });
 
+    
     // 2. EXIT CHAT MODE & HAND BACK CONTROL TO SCENE 2
     closeChatBtn.addEventListener('click', () => {
         chatOverlay.style.opacity = '0';
@@ -47,8 +48,15 @@
             if (typeof window.startBlinkingLoop === 'function') {
                 window.startBlinkingLoop();
             }
+
+            // *** ADD THIS LINE TO RETURN CONTROL TO SCENE 2 ***
+            if (typeof window.returnToScene2 === 'function') {
+                window.returnToScene2();
+            }
+
         }, 400); // Matches the CSS transition delay duration smoothly
     });
+
 
     // 3. VOICE INPUT SYSTEM (SPEECH TO TEXT)
     // Checks native web-audio recognition availability in modern browsers
