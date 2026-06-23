@@ -54,13 +54,13 @@
                 "Konnichiwa! Let's do our best today!",
                 "Purr... that tickles! Arigatou!",
                 "Can we check GitHub again?",
-                "Nyan~ Happy to see you, {name}!"
+                "Nyan\~ Happy to see you, {name}!"
             ],
             feedDialogues: ["Itadakimasu! 🍣", "Oishii! 🐱", "Thank you for the delicious meal!"]
         },
         Golden: {
             prefix: 'cat5',
-            folder: 'GoldenCat',
+            folder: 'Goldencat',  // Fixed case to match actual assets/Goldencat directory
             dialogues : [
                 "Do you wan some money 💰?",
                 "Buy me some food {name}!",
@@ -76,7 +76,7 @@
     // Helper to dynamically get image paths based on active cat variant
     function getCatAsset(type) {
         const cat = catAssets[currentCat];
-        return `assets/${cat.folder}/${cat.prefix}${type}.png`;
+        return `assets/\( {cat.folder}/ \){cat.prefix}${type}.png`;
     }
 
     // NEW: Helper to get a random dynamic line based on the active cat type
