@@ -460,3 +460,307 @@ body::after {
     height: 30px;
     object-fit: contain;
 }
+
+
+/* ==========================================================================
+   AI CAT CHAT INTERFACE - STYLES
+   ========================================================================== */
+
+/* Bottom Left Main Entry Button */
+.chat-trigger-btn {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    padding: 12px 22px;
+    background: #111111;
+    color: #ffffff;
+    font-family: inherit;
+    font-weight: bold;
+    border: 3px solid #ffffff;
+    box-shadow: 4px 4px 0px #000000;
+    cursor: pointer;
+    image-rendering: pixelated;
+    transition: transform 0.1s ease, background 0.2s ease;
+    z-index: 10;
+}
+
+.chat-trigger-btn:hover {
+    background: #222222;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #000000;
+}
+
+.chat-trigger-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px #000000;
+}
+
+/* Chat Screen Main Layout Layer Container */
+.chat-overlay-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Luxury Grainy Dark Texture Filter & Background Mix */
+.chat-bg-grain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #2c2c2c 0%, #0d0d0d 100%);
+    z-index: -1;
+}
+
+.chat-bg-grain::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0.04;
+    pointer-events: none;
+    /* Clean high-density analog monochromatic grain configuration */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3联%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Active Layout Layout Grid Wrapper */
+.chat-layout-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 680px;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Standalone Pixel Exit Button */
+.chat-exit-btn {
+    position: absolute;
+    top: -10px;
+    right: 0;
+    background: #e63946;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    padding: 6px 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 3px 3px 0px #000000;
+}
+
+/* Center Stage Viewport for the Chatting Cat */
+.chat-active-display {
+    margin-bottom: 20px;
+    transform: scale(1.15);
+    image-rendering: pixelated;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
+    animation: catFloat 4s ease-in-out infinite;
+}
+
+@keyframes catFloat {
+    0%, 100% { transform: translateY(0) scale(1.15); }
+    50% { transform: translateY(-10px) scale(1.15); }
+}
+
+/* PREMIUM MULTI-LAYERED GLASSMORPHIC CARD STACK WITH SHINY BORDERS */
+.glass-chat-card-outer {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 4px; /* Creates spacing layer for deep pixel effect */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 
+                inset 0 1px 0px rgba(255, 255, 255, 0.2);
+}
+
+.glass-chat-card-inner {
+    width: 100%;
+    background: rgba(18, 18, 18, 0.65);
+    border-radius: 12px;
+    border: 2px solid #000000; /* Outer black line frame */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+}
+
+/* Scrollable Inner Dialog Feed Viewport Window */
+.chat-message-viewport {
+    flex-grow: 1;
+    height: 260px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding-right: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Customized Minimal Scrollbar */
+.chat-message-viewport::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-message-viewport::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+.chat-message-viewport::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+/* Dialog Text Speech Bubbles Layout styling */
+.ai-bubble, .user-bubble {
+    max-width: 85%;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.ai-bubble {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.08);
+    color: #e0e0e0;
+    border-left: 3px solid #b8c0ff;
+}
+
+.user-bubble {
+    align-self: flex-end;
+    background: rgba(255, 255, 255, 0.9);
+    color: #121212;
+    border-right: 3px solid #000000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.system-bubble {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: #888888;
+    border: none;
+    align-self: center;
+    background: transparent;
+}
+
+/* Chat Engine Text Input Layout Elements */
+.chat-input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.input-wrapper-pixel {
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 2px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.input-wrapper-pixel input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-family: inherit;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+}
+
+.input-wrapper-pixel input::placeholder {
+    color: #666666;
+}
+
+/* Action Control System Deck (Microphone & Send Circle Buttons) */
+.chat-control-deck {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.circle-btn {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mic-btn {
+    background: rgba(255, 255, 255, 0.07);
+    color: #ffffff;
+}
+
+.mic-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ff4d6d;
+    border-color: #ff4d6d;
+}
+
+/* Active Voice Input Mode Pulse Ring Glow Effect */
+.mic-btn.recording-active {
+    background: #ff4d6d !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+}
+
+.mic-pulse-ring {
+    display: none;
+    position: absolute;
+    top: -4px; left: -4px; right: -4px; bottom: -4px;
+    border: 2px solid #ff4d6d;
+    border-radius: 50%;
+    animation: micPulse 1.4s infinite linear;
+}
+
+.mic-btn.recording-active .mic-pulse-ring {
+    display: block;
+}
+
+@keyframes micPulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.3); opacity: 0; }
+}
+
+.send-btn {
+    background: #ffffff;
+    color: #121212;
+    box-shadow: 0 4px 12px rgba(255,255,255,0.25);
+}
+
+.send-btn:hover {
+    transform: scale(1.08);
+    background: #e0e0e0;
+    box-shadow: 0 6px 16px rgba(255,255,255,0.4);
+}
+
+.send-btn:active {
+    transform: scale(0.95);
+}
+
+/* Utility Class for Engine Handshakes */
+.hidden {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
