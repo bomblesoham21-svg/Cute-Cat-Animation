@@ -581,12 +581,11 @@ body::after {
 /* Center Stage Viewport for the Chatting Cat */
 .chat-active-display {
     margin-bottom: 20px;
-    transform: scale(1.15);
+    transform: scale(0.85);
     image-rendering: pixelated;
     filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
     animation: catFloat 4s ease-in-out infinite;
 }
-
 @keyframes catFloat {
     0%, 100% { transform: translateY(0) scale(1.15); }
     50% { transform: translateY(-10px) scale(1.15); }
