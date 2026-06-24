@@ -1,7 +1,3 @@
-// ==========================================================================
-// REPLACE THE TOP HALF OF api/gemini-chat.js WITH THIS FIXED BLOCK:
-// ==========================================================================
-import { GoogleGenAI } from '@google/generative-ai';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase using your Vercel Environment Variables
@@ -9,11 +5,7 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Securely instantiate Google Gemini Client
-// Using the standard environment variable name you set in Vercel
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
-// System Prompts: Tailor the distinct short, punchy personality for each cat variant
+// System Prompts: Short, punchy personality strings per cat variant
 const catPersonalities = {
     orange: "You are a chaotic, highly enthusiastic Orange Cat programming companion. Speak in short sentences, sound excited, and frequently use cat puns or mention tuna and speedy code compilation. Never type more than 2 short sentences.",
     witch: "You are a mysterious Witch Cat. You speak elegantly, with mild mystical wit, using terms like spells, potions, or cosmic compilation bugs. Keep your answers short, cryptic, and clever. Maximum 2 sentences.",
@@ -21,10 +13,8 @@ const catPersonalities = {
     Japanese: "You are a highly polite, encouraging Nyan-style Japanese Cat. Greet warmly, use light honorific expressions (like Arigatou or Gomen), and keep your responses extremely comforting, supportive, and compact. 1-2 lines.",
     Golden: "You are a rare, luxurious, and highly sophisticated Golden Cat. You think highly of yourself but love giving golden nuggets of wisdom. Keep it extremely brief, sassy, and premium. 1-2 lines."
 };
-// ==========================================================================
 
 export default async function handler(req, res) {
-    // Only accept incoming POST requests
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
@@ -33,12 +23,11 @@ export default async function handler(req, res) {
         const { username, catType, message } = req.body;
 
         if (!username || !catType || !message) {
-            return res.status(400).json({ error: 'Missing baseline payload configuration parameters.' });
+            return res.status(400).json({ error: 'Missing baseline parameters.' });
         }
 
-        // 1. EXTRACT RECENT HISTORICAL CONTEXT FROM SUPABASE (Free-tier safe payload throttling)
-        // Grab the last 6 messages for this specific user and cat variant to form continuous chat threads
-        const { data: rawHistory, error: dbError } = await supabase
+        // 1. Fetch recent history from Supabase
+        const { data: rawHistory } = await supabase
             .from('cat_chat_history')
             .select('role, content')
             .eq('username', username)
@@ -46,46 +35,58 @@ export default async function handler(req, res) {
             .order('id', { ascending: false })
             .limit(6);
 
-        if (dbError) console.error("History fetch warning:", dbError);
-
-        // Map historical rows chronologically matching Gemini's structure requirement ({ role, parts })
-        const formattedHistory = [];
+        // 2. Build the structural payload content for Gemini
+        const contents = [];
         if (rawHistory && rawHistory.length > 0) {
-            // Reverse back to ascending order so history reads oldest to newest
-            const chronologicalHistory = rawHistory.reverse();
+            // Reverse so it is in chronological order (oldest -> newest)
+            const chronologicalHistory = [...rawHistory].reverse();
             chronologicalHistory.forEach(msg => {
-                formattedHistory.push({
+                contents.push({
                     role: msg.role === 'user' ? 'user' : 'model',
                     parts: [{ text: msg.content }]
                 });
             });
         }
-
-        // 2. BOOTSTRAP GEMINI FLASH MODEL
-        const model = ai.getGenerativeModel({ 
-            model: "gemini-1.5-flash",
-            // Injecting specific structural configuration parameters to guarantee brief cat replies
-            generationConfig: {
-                maxOutputTokens: 60, 
-                temperature: 0.85
-            }
+        
+        // Append current incoming user message
+        contents.push({
+            role: 'user',
+            parts: [{ text: message }]
         });
 
-        // 3. LAUNCH CHAT SYSTEM INSIDE THE SERVERLESS RUNTIME WITH SPECIFIC IDENTITY CONTEXT
-        const chatSession = model.startChat({
-            history: formattedHistory,
-            systemInstruction: catPersonalities[catType] || catPersonalities.orange
+        const systemInstructionText = catPersonalities[catType] || catPersonalities.orange;
+
+        // 3. Make direct standard HTTPS API request to Google API Gateway
+        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        
+        const apiResponse = await fetch(geminiEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: contents,
+                systemInstruction: {
+                    parts: [{ text: systemInstructionText }]
+                },
+                generationConfig: {
+                    maxOutputTokens: 60,
+                    temperature: 0.85
+                }
+            })
         });
 
-        // Send the message straight into the initialized structural context feed
-        const aiResult = await chatSession.sendMessage(message);
-        const aiResponseText = aiResult.response.text().trim();
+        const aiData = await apiResponse.json();
 
-        // Send text reply smoothly back to your catchat.js client application framework
-        return res.status(200).json({ reply: aiResponseText });
+        // Safe mining of the nested text value within Gemini API response object 
+        if (aiData.candidates && aiData.candidates[0].content.parts[0].text) {
+            const aiResponseText = aiData.candidates[0].content.parts[0].text.trim();
+            return res.status(200).json({ reply: aiResponseText });
+        } else {
+            console.error("Gemini Unexpected Response Structure:", aiData);
+            return res.status(200).json({ reply: "Meow... My thoughts are a bit tangled. Try asking again? 🐾" });
+        }
 
     } catch (globalError) {
-        console.error("Critical AI Gateway Failure:", globalError);
-        return res.status(500).json({ error: "Internal operational exception during pipeline parsing." });
+        console.error("Serverless Pipeline Error:", globalError);
+        return res.status(500).json({ error: "Internal processing failure." });
     }
 }
