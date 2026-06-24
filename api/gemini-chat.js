@@ -1,12 +1,16 @@
+// ==========================================================================
+// REPLACE THE TOP HALF OF api/gemini-chat.js WITH THIS FIXED BLOCK:
+// ==========================================================================
 import { GoogleGenAI } from '@google/generative-ai';
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase admin client using server-side environment configurations
+// Initialize Supabase using your Vercel Environment Variables
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Securely instantiate Google Gemini Client
+// Using the standard environment variable name you set in Vercel
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // System Prompts: Tailor the distinct short, punchy personality for each cat variant
@@ -17,6 +21,7 @@ const catPersonalities = {
     Japanese: "You are a highly polite, encouraging Nyan-style Japanese Cat. Greet warmly, use light honorific expressions (like Arigatou or Gomen), and keep your responses extremely comforting, supportive, and compact. 1-2 lines.",
     Golden: "You are a rare, luxurious, and highly sophisticated Golden Cat. You think highly of yourself but love giving golden nuggets of wisdom. Keep it extremely brief, sassy, and premium. 1-2 lines."
 };
+// ==========================================================================
 
 export default async function handler(req, res) {
     // Only accept incoming POST requests
