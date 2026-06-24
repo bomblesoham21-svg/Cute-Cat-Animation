@@ -151,11 +151,14 @@
         try {
             // STEP 4A: Save User message to Supabase
             // (Assuming your supabase client is globally initialized in supabase.js as `window.supabase`)
-            if (window.supabase) {
-                await window.supabase.from('cat_chat_history').insert([
+            if (!window.supabase?.from) {
+                throw new Error("Supabase client not initialized");
+}
+
+            await window.supabase.from('cat_chat_history').insert([
                     { username: currentName, cat_type: activeCatKey, role: 'user', content: text }
                 ]);
-            }
+        
 
             // STEP 4B: Call Vercel Serverless Function (Gemini Route)
             // Replace '/api/gemini-chat' with your relative Vercel deployment route later

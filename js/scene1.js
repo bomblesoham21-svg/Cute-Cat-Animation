@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             // Send data to Supabase
-            await supabaseClient
+            await window.supabase
                 .from('visitors')
                 .insert([{ username: username }]);
                 
