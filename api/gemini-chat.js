@@ -89,7 +89,9 @@ export default async function handler(req, res) {
                 "Oopsie! The server cat tripped on a cable. Retry? 😿"
             ];
             const randomReply = errorReplies[Math.floor(Math.random() * errorReplies.length)];
-            return res.status(200).json({ reply: randomReply });
+            return res.status(500).json({
+                error: aiData
+            });
         }
 
         if (aiData.candidates && aiData.candidates.length > 0) {
