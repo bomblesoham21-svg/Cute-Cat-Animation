@@ -56,8 +56,8 @@ export default async function handler(req, res) {
         const systemInstructionText = catPersonalities[catType] || catPersonalities.orange;
 
         // 3. Make direct standard HTTPS API request to Google API Gateway
-        // Using the stable, proven model that was working before
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        // Targeting the active Gemini 3.5 Flash light model from your AI Studio dropdown list
+        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
         
         const apiResponse = await fetch(geminiEndpoint, {
             method: 'POST',
