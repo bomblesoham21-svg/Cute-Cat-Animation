@@ -52,7 +52,8 @@ export default async function handler(req, res) {
         const systemInstructionText = catPersonalities[catType] || catPersonalities.orange;
 
         // FIXED: Use stable v1 endpoint (more reliable than v1beta for gemini-3.5-flash)
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const geminiEndpoint =
+`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
         
         const apiResponse = await fetch(geminiEndpoint, {
             method: 'POST',
