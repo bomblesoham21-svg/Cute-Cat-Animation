@@ -6,4 +6,8 @@ const supabaseClient = supabase.createClient(
     SUPABASE_ANON_KEY
 );
 
+// Expose globally so catchat.js (window.supabase) + scene1.js (supabaseClient) both work
+window.supabase = supabaseClient;
+window.supabaseClient = supabaseClient;
+
 console.log("Supabase Connected");
