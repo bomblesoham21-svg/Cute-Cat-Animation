@@ -77,6 +77,10 @@ export default async function handler(req, res) {
 
         const aiData = await apiResponse.json();
 
+        console.log("STATUS:", apiResponse.status);
+        console.log("GEMINI RESPONSE:");
+        console.log(JSON.stringify(aiData, null, 2));
+
         if (!apiResponse.ok || aiData.error) {
             console.error("Gemini API Error:", aiData.error || `HTTP ${apiResponse.status}`);
             const errorReplies = [
