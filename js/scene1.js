@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.icon-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const box = btn.nextElementSibling;
+            box.classList.toggle('visible');
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('gradient-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
