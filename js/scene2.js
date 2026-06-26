@@ -1,5 +1,8 @@
 // Wrap code in a block scope to prevent global variable pollution
 {
+    // Inside your scene2.js initialization code
+    document.body.classList.add('scene-two');
+
     const catSprite = document.getElementById("cat-sprite");
     const dialogueText = document.getElementById("dialogue-text");
     const scene2 = document.getElementById("scene-2");
