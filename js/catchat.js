@@ -1,199 +1,509 @@
-// Wrap code in a block scope to prevent global variable pollution
+// ==========================================================
+// Cute Cat Chat System
+// Part 1 / 4
+// UI Initialization + Helpers
+// ==========================================================
+
 {
+    // ------------------------------------------------------
+    // DOM REFERENCES
+    // ------------------------------------------------------
+
     const openChatBtn = document.getElementById('open-chat-btn');
     const closeChatBtn = document.getElementById('close-chat-btn');
+
     const chatOverlay = document.getElementById('chat-overlay');
     const chatActiveCatSprite = document.getElementById('chat-active-cat-sprite');
+
     const chatMessagesBox = document.getElementById('chat-messages-box');
+
     const chatTextInput = document.getElementById('chat-text-input');
+
     const chatSendBtn = document.getElementById('chat-send-btn');
     const chatMicBtn = document.getElementById('chat-mic-btn');
+
+    // ------------------------------------------------------
+    // CHAT SETTINGS
+    // Easy place to customize later
+    // ------------------------------------------------------
+
+    const CHAT_CONFIG = {
+
+        maxMessageLength: 250,
+
+        autoScroll: true,
+
+        saveChatHistory: true,
+
+        thinkingDelay: {
+            min: 500,
+            max: 1200
+        },
+
+        thinkingMessages: [
+
+            "Thinking...",
+
+            "Cleaning my whiskers...",
+
+            "Watching birds...",
+
+            "Sharpening my claws...",
+
+            "Sniffing around...",
+
+            "Looking through memories...",
+
+            "Stretching before answering...",
+
+            "Chasing invisible bugs..."
+        ]
+
+    };
+
+    // ------------------------------------------------------
+    // RUNTIME VARIABLES
+    // ------------------------------------------------------
 
     let recognition = null;
     let isRecording = false;
 
-    // 1. INITIALIZE TRANSITION TO CHAT MODE
-    openChatBtn.addEventListener('click', () => {
-        // Freeze scene2.js blinking loops and event click actions
+    // ------------------------------------------------------
+    // OPEN CHAT
+    // ------------------------------------------------------
+
+    openChatBtn.addEventListener("click", () => {
+
         window.catInteractionEnabled = false;
 
-        // Get the active cat character from scene2.js scope state
-        // We look at the image source currently showing on the main scene 2 canvas
-        const currentCatSpriteSrc = document.getElementById('cat-sprite').src;
-        
-        // Match the exact sprite frame over to the chat window stage
+        const currentCatSpriteSrc =
+            document.getElementById("cat-sprite").src;
+
         chatActiveCatSprite.src = currentCatSpriteSrc;
 
-        // Smoothly fade-in/reveal the premium dark grainy chat window layout
-        chatOverlay.classList.remove('hidden');
-        chatOverlay.style.opacity = '0';
+        chatOverlay.classList.remove("hidden");
+
+        chatOverlay.style.opacity = "0";
+
         setTimeout(() => {
-            chatOverlay.style.opacity = '1';
+
+            chatOverlay.style.opacity = "1";
+
         }, 10);
+
     });
 
-    
-    // 2. EXIT CHAT MODE & HAND BACK CONTROL TO SCENE 2
-    closeChatBtn.addEventListener('click', () => {
-        chatOverlay.style.opacity = '0';
-        
+    // ------------------------------------------------------
+    // CLOSE CHAT
+    // ------------------------------------------------------
+
+    closeChatBtn.addEventListener("click", () => {
+
+        chatOverlay.style.opacity = "0";
+
         setTimeout(() => {
-            chatOverlay.classList.add('hidden');
-            
-            // Unfreeze scene2.js interactions and reboot the natural blinking loop
+
+            chatOverlay.classList.add("hidden");
+
             window.catInteractionEnabled = true;
-            
-            // Re-sync the core game sprite just in case changes happened
-            const currentCatType = document.getElementById('cat-sprite').src;
-            if (typeof window.startBlinkingLoop === 'function') {
+
+            if (typeof window.startBlinkingLoop === "function") {
+
                 window.startBlinkingLoop();
+
             }
 
-            // *** ADD THIS LINE TO RETURN CONTROL TO SCENE 2 ***
-            if (typeof window.returnToScene2 === 'function') {
+            if (typeof window.returnToScene2 === "function") {
+
                 window.returnToScene2();
+
             }
 
-        }, 400); // Matches the CSS transition delay duration smoothly
+        }, 400);
+
     });
 
+    // ------------------------------------------------------
+    // VOICE INPUT
+    // ------------------------------------------------------
 
-    // 3. VOICE INPUT SYSTEM (SPEECH TO TEXT)
-    // Checks native web-audio recognition availability in modern browsers
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
     if (SpeechRecognition) {
+
         recognition = new SpeechRecognition();
-        recognition.continuous = false; // Stop listening automatically when user stops speaking
-        recognition.lang = 'en-US';
+
+        recognition.lang = "en-US";
+
+        recognition.continuous = false;
 
         recognition.onstart = () => {
+
             isRecording = true;
-            chatMicBtn.classList.add('recording-active');
+
+            chatMicBtn.classList.add("recording-active");
+
             chatTextInput.placeholder = "Listening closely...";
+
         };
 
         recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            chatTextInput.value = transcript; // Injects spoken phrase straight to input box
+
+            chatTextInput.value =
+                event.results[0][0].transcript;
+
         };
 
-        recognition.onerror = () => {
-            cleanupMicState();
-        };
+        recognition.onerror = cleanupMicState;
 
-        recognition.onend = () => {
-            cleanupMicState();
-        };
+        recognition.onend = cleanupMicState;
 
-        chatMicBtn.addEventListener('click', (e) => {
+        chatMicBtn.addEventListener("click", (e) => {
+
             e.stopPropagation();
-            if (!isRecording) {
-                recognition.start();
-            } else {
+
+            if (isRecording) {
+
                 recognition.stop();
+
+            } else {
+
+                recognition.start();
+
             }
+
         });
+
     } else {
-        // Hide microphone if browser doesn't natively support SpeechRecognition
-        chatMicBtn.style.display = 'none';
+
+        chatMicBtn.style.display = "none";
+
     }
 
     function cleanupMicState() {
+
         isRecording = false;
-        chatMicBtn.classList.remove('recording-active');
-        chatTextInput.placeholder = "Whisper something to the cat...";
+
+        chatMicBtn.classList.remove("recording-active");
+
+        chatTextInput.placeholder =
+            "Whisper something to the cat...";
+
     }
 
-    // 4. CHAT LOG APPENDER HELPERS
+    // ------------------------------------------------------
+    // CHAT HELPERS
+    // ------------------------------------------------------
+
     function appendMessageBubble(text, sender) {
-        const bubble = document.createElement('div');
-        bubble.classList.add(sender === 'user' ? 'user-bubble' : 'ai-bubble');
+
+        const bubble = document.createElement("div");
+
+        bubble.classList.add(
+            sender === "user"
+                ? "user-bubble"
+                : "ai-bubble"
+        );
+
         bubble.textContent = text;
+
         chatMessagesBox.appendChild(bubble);
-        
-        // Keep view pinned to bottom on fresh additions
-        chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+
+        if (CHAT_CONFIG.autoScroll) {
+
+            chatMessagesBox.scrollTop =
+                chatMessagesBox.scrollHeight;
+
+        }
+
     }
 
-    // 5. MESSAGE TRANSMISSION DISPATCHER
-    chatSendBtn.addEventListener('click', handleMessageSending);
-    chatTextInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleMessageSending();
-    });
+    function appendThinkingBubble() {
 
-    async function handleMessageSending() {
-        const text = chatTextInput.value.trim();
-        if (!text) return;
+        const bubble = document.createElement("div");
 
-        // Clear input element immediately for snappy feel
-        chatTextInput.value = '';
+        bubble.classList.add(
+            "ai-bubble",
+            "system-bubble"
+        );
 
-        // Render user speech locally
-        appendMessageBubble(text, 'user');
+        bubble.textContent =
+            CHAT_CONFIG.thinkingMessages[
+                Math.floor(
+                    Math.random() *
+                    CHAT_CONFIG.thinkingMessages.length
+                )
+            ];
 
-        // Extract username and current profile tracking context
-        const currentName = window.currentUserName || localStorage.getItem('savedUserName') || "Human";
-        
-        // Dynamically detect which layout profile is active by tracking standard path structures
-        let activeCatKey = "orange";
-        const catSrc = chatActiveCatSprite.src;
-        if (catSrc.includes('witchcat')) activeCatKey = "witch";
-        else if (catSrc.includes('frostcat')) activeCatKey = "frost";
-        else if (catSrc.includes('Japanesecat')) activeCatKey = "Japanese";
-        else if (catSrc.includes('Goldencat')) activeCatKey = "Golden";
+        chatMessagesBox.appendChild(bubble);
 
-        // Placeholder logic to show system processing state
-        const loadingIndicator = document.createElement('div');
-        loadingIndicator.classList.add('ai-bubble', 'system-bubble');
-        loadingIndicator.textContent = "Cat is thinking...";
-        chatMessagesBox.appendChild(loadingIndicator);
+        if (CHAT_CONFIG.autoScroll) {
+
+            chatMessagesBox.scrollTop =
+                chatMessagesBox.scrollHeight;
+
+        }
+
+        return bubble;
+
+    }
+
+// ------------------------------------------------------
+    // HELPERS
+    // ------------------------------------------------------
+
+    function removeThinkingBubble(bubble) {
+
+        if (bubble && bubble.parentNode) {
+            bubble.remove();
+        }
+
+    }
+
+    function getCurrentUsername() {
+
+        return (
+            window.currentUserName ||
+            localStorage.getItem("savedUserName") ||
+            "Human"
+        );
+
+    }
+
+    function detectCurrentCat() {
+
+        const catSrc = chatActiveCatSprite.src.toLowerCase();
+
+        if (catSrc.includes("witchcat")) return "witch";
+
+        if (catSrc.includes("frostcat")) return "frost";
+
+        if (catSrc.includes("japanesecat")) return "Japanese";
+
+        if (catSrc.includes("goldencat")) return "Golden";
+
+        return "orange";
+
+    }
+
+    async function saveChatMessage(username, catType, role, content) {
+
+        if (!CHAT_CONFIG.saveChatHistory) return;
+
+        if (!window.supabase?.from) {
+
+            console.warn("Supabase not available.");
+
+            return;
+
+        }
 
         try {
-            // STEP 4A: Save User message to Supabase
-            // (Assuming your supabase client is globally initialized in supabase.js as `window.supabase`)
-            if (!window.supabase?.from) {
-                throw new Error("Supabase client not initialized");
-}
 
-            await window.supabase.from('cat_chat_history').insert([
-                    { username: currentName, cat_type: activeCatKey, role: 'user', content: text }
+            await window.supabase
+                .from("cat_chat_history")
+                .insert([
+                    {
+                        username,
+                        cat_type: catType,
+                        role,
+                        content
+                    }
                 ]);
-        
 
-            // STEP 4B: Call Vercel Serverless Function (Gemini Route)
-            // Replace '/api/gemini-chat' with your relative Vercel deployment route later
-            const response = await fetch('/api/gemini-chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username: currentName,
-                    catType: activeCatKey,
-                    message: text
-                })
-            });
+        } catch (err) {
 
-            const data = await response.json();
-            
-            // Wipe out loading text state 
-            loadingIndicator.remove();
+            console.error("Failed to save chat:", err);
 
-            if (data.reply) {
-                appendMessageBubble(data.reply, 'model');
-
-                // STEP 4C: Save AI Response reply back to Supabase
-                if (window.supabase) {
-                    await window.supabase.from('cat_chat_history').insert([
-                        { username: currentName, cat_type: activeCatKey, role: 'model', content: data.reply }
-                    ]);
-                }
-            } else {
-                appendMessageBubble("Meow... I couldn't reach my brain wires. Try again?", 'model');
-            }
-
-        } catch (error) {
-            loadingIndicator.remove();
-            appendMessageBubble("Error linking up... Meow! 😿", 'model');
-            console.error("Transmission error:", error);
         }
+
     }
-}
+
+    function randomThinkingDelay() {
+
+        const { min, max } = CHAT_CONFIG.thinkingDelay;
+
+        return Math.floor(
+            Math.random() * (max - min + 1)
+        ) + min;
+
+    }
+
+    function wait(ms) {
+
+        return new Promise(resolve => setTimeout(resolve, ms));
+
+    }
+
+    // ------------------------------------------------------
+    // CHAT EVENTS
+    // ------------------------------------------------------
+
+    chatSendBtn.addEventListener(
+        "click",
+        handleMessageSending
+    );
+
+    chatTextInput.addEventListener("keypress", (e) => {
+
+        if (e.key === "Enter") {
+
+            handleMessageSending();
+
+        }
+
+    });
+
+    // ------------------------------------------------------
+    // MAIN MESSAGE HANDLER
+    // Gemini has been completely removed.
+    // Replies are now generated locally by CatBrain.
+    // ------------------------------------------------------
+
+    async function handleMessageSending() {
+
+        const text = chatTextInput.value.trim();
+
+        if (!text) return;
+
+        if (text.length > CHAT_CONFIG.maxMessageLength) {
+
+            appendMessageBubble(
+                "Meow! That's a really long message. Try making it a little shorter.",
+                "model"
+            );
+
+            return;
+
+        }
+
+        chatTextInput.value = "";
+
+        appendMessageBubble(text, "user");
+
+        const username = getCurrentUsername();
+
+        const activeCat = detectCurrentCat();
+
+        await saveChatMessage(
+            username,
+            activeCat,
+            "user",
+            text
+        );
+
+        const thinkingBubble =
+            appendThinkingBubble();
+
+        await wait(randomThinkingDelay());
+
+        // --------------------------------------------------
+        // CatBrain Hook
+        // catbrain.js will provide this object.
+        // --------------------------------------------------
+
+        let reply;
+
+        if (
+            window.CatBrain &&
+            typeof window.CatBrain.generateReply === "function"
+        ) {
+
+            reply =
+                window.CatBrain.generateReply(
+                    text,
+                    activeCat
+                );
+
+        } else {
+
+            reply =
+                "Meow... My brain hasn't been loaded yet.";
+
+        }
+
+        removeThinkingBubble(thinkingBubble);
+        // --------------------------------------------------
+        // Display the reply
+        // --------------------------------------------------
+
+        appendMessageBubble(reply, "model");
+
+        // --------------------------------------------------
+        // Save Cat reply to Supabase
+        // (Failure here should NEVER stop the chat.)
+        // --------------------------------------------------
+
+        await saveChatMessage(
+            username,
+            activeCat,
+            "model",
+            reply
+        );
+
+        // --------------------------------------------------
+        // Future Extension Hooks
+        // Uncomment and build these whenever you want.
+        // --------------------------------------------------
+
+        /*
+        window.CatBrain.learn(text);
+
+        window.CatBrain.updateMemory(
+            username,
+            text
+        );
+
+        window.CatBrain.detectEmotion(text);
+
+        window.CatBrain.generateVoice(reply);
+
+        window.CatBrain.generateImage(text);
+
+        window.CatBrain.saveTopicHistory();
+        */
+
+    }
+
+    // ------------------------------------------------------
+    // PUBLIC DEBUG HELPERS
+    // These are optional and useful while developing.
+    // ------------------------------------------------------
+
+    window.CatChat = {
+
+        version: "1.0",
+
+        config: CHAT_CONFIG,
+
+        getCurrentCat: detectCurrentCat,
+
+        getCurrentUsername: getCurrentUsername,
+
+        appendMessage: appendMessageBubble,
+
+        appendThinking: appendThinkingBubble,
+
+        saveMessage: saveChatMessage
+
+    };
+    // ------------------------------------------------------
+    // INITIALIZATION
+    // Runs once when catchat.js loads.
+    // Future startup logic can be added here.
+    // ------------------------------------------------------
+
+    (function initializeCatChat() {
+
+        console.log("🐱 Cat Chat initialized.");
+
+        // Future examples:
+        // window.CatBrain.loadMemory();
+        // window.CatBrain.preloadKnowledge();
+        // window.CatBrain.warmup();
+
+    })();
+
+} // ===================== End of catchat.js =====================
